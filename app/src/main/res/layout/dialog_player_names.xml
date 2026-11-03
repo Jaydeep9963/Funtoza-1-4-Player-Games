@@ -1,234 +1,481 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/bg_glass_dialog"
-    android:padding="24dp"
-    android:gravity="center_horizontal">
+    android:paddingStart="22dp"
+    android:paddingEnd="22dp"
+    android:clipToPadding="false">
 
-    <!-- Header with title -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageButton
-            android:id="@+id/btnPlayerSetupBack"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/bg_glass_icon_btn"
-            android:src="@drawable/ic_back"
-            android:tint="@color/white"
-            android:contentDescription="Back" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/tvPlayerSetupTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PLAYER SETUP"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08" />
-
-            <TextView
-                android:id="@+id/tvPlayerSetupSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Enter names for this match"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <!-- Player Name Input Rows -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="20dp">
+        android:background="@drawable/bg_glass_dialog"
+        android:padding="20dp"
+        android:gravity="center_horizontal">
 
-        <!-- Player 1 Row (Red) -->
-        <LinearLayout
-            android:id="@+id/rowP1"
+        <!-- Top Header with Back Button, Title and Subtitle -->
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_glass_card"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:layout_marginBottom="10dp">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:background="@drawable/bg_pill_p1"
-                android:text="P1"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:gravity="center" />
+            <ImageButton
+                android:id="@+id/btnPlayerSetupBack"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_glass_icon_btn"
+                android:src="@drawable/ic_back"
+                app:tint="@color/white"
+                android:contentDescription="Back" />
 
-            <EditText
-                android:id="@+id/etPlayer1Name"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvPlayerSetupTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 PLAYER SETUP"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04" />
+
+                <TextView
+                    android:id="@+id/tvPlayerSetupSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Enter names &amp; configure match"
+                    android:textColor="#8B95B0"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- Player Name Cards Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <!-- Team 1 Header Banner (Shown ONLY in 2vs2 Team Play) -->
+            <LinearLayout
+                android:id="@+id/layoutTeam1Header"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:background="@null"
-                android:hint="Player 1 Name"
-                android:textColorHint="#607090"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:inputType="textPersonName|textCapWords" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔴 TEAM 1 (RED)"
+                    android:textColor="#FF477E"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:background="#3D2040" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="P1 + P2"
+                    android:textColor="#B07090"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Player 1 Card (Pink/Red) -->
+            <LinearLayout
+                android:id="@+id/rowP1"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_player_input_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingStart="12dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/tvAvatarP1"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_avatar_squircle_p1"
+                    android:text="P1"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvLabelP1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER NAME"
+                        android:textColor="#FF477E"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <EditText
+                        android:id="@+id/etPlayer1Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:background="@null"
+                        android:hint="Player 1"
+                        android:textColorHint="#607090"
+                        android:textColor="@color/white"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:inputType="textPersonName|textCapWords" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnEditP1"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="6dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_edit"
+                    app:tint="#707F9E"
+                    android:contentDescription="Edit Name" />
+            </LinearLayout>
+
+            <!-- Player 2 Card (Blue / Team 1 Member) -->
+            <LinearLayout
+                android:id="@+id/rowP2"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_player_input_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingStart="12dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvAvatarP2"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_avatar_squircle_p2"
+                    android:text="P2"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvLabelP2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER NAME"
+                        android:textColor="#00B4F0"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <EditText
+                        android:id="@+id/etPlayer2Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:background="@null"
+                        android:hint="Player 2"
+                        android:textColorHint="#607090"
+                        android:textColor="@color/white"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:inputType="textPersonName|textCapWords" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnEditP2"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="6dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_edit"
+                    app:tint="#707F9E"
+                    android:contentDescription="Edit Name" />
+            </LinearLayout>
+
+            <!-- Team 2 Header Banner (Shown ONLY in 2vs2 Team Play) -->
+            <LinearLayout
+                android:id="@+id/layoutTeam2Header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔵 TEAM 2 (BLUE)"
+                    android:textColor="#00B4F0"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:background="#203050" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="P3 + P4"
+                    android:textColor="#6090B0"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Player 3 Card (Green / Team 2 Member) -->
+            <LinearLayout
+                android:id="@+id/rowP3"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_player_input_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingStart="12dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvAvatarP3"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_avatar_squircle_p3"
+                    android:text="P3"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvLabelP3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER NAME"
+                        android:textColor="#00E676"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <EditText
+                        android:id="@+id/etPlayer3Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:background="@null"
+                        android:hint="Player 3"
+                        android:textColorHint="#607090"
+                        android:textColor="@color/white"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:inputType="textPersonName|textCapWords" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnEditP3"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="6dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_edit"
+                    app:tint="#707F9E"
+                    android:contentDescription="Edit Name" />
+            </LinearLayout>
+
+            <!-- Player 4 Card (Yellow / Team 2 Member) -->
+            <LinearLayout
+                android:id="@+id/rowP4"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_player_input_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingStart="12dp"
+                android:paddingEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvAvatarP4"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_avatar_squircle_p4"
+                    android:text="P4"
+                    android:textColor="#3D2900"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvLabelP4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PLAYER NAME"
+                        android:textColor="#FFB800"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <EditText
+                        android:id="@+id/etPlayer4Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:background="@null"
+                        android:hint="Player 4"
+                        android:textColorHint="#607090"
+                        android:textColor="@color/white"
+                        android:textSize="15.5sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:inputType="textPersonName|textCapWords" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/btnEditP4"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="6dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_edit"
+                    app:tint="#707F9E"
+                    android:contentDescription="Edit Name" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Player 2 Row (Blue) -->
-        <LinearLayout
-            android:id="@+id/rowP2"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_glass_card"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:layout_marginBottom="10dp">
-
-            <TextView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:background="@drawable/bg_pill_p2"
-                android:text="P2"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:gravity="center" />
-
-            <EditText
-                android:id="@+id/etPlayer2Name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:background="@null"
-                android:hint="Player 2 Name"
-                android:textColorHint="#607090"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:inputType="textPersonName|textCapWords" />
-        </LinearLayout>
-
-        <!-- Player 3 Row (Green) -->
-        <LinearLayout
-            android:id="@+id/rowP3"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_glass_card"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:layout_marginBottom="10dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:background="@drawable/bg_pill_p3"
-                android:text="P3"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:gravity="center" />
-
-            <EditText
-                android:id="@+id/etPlayer3Name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:background="@null"
-                android:hint="Player 3 Name"
-                android:textColorHint="#607090"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:inputType="textPersonName|textCapWords" />
-        </LinearLayout>
-
-        <!-- Player 4 Row (Yellow) -->
-        <LinearLayout
-            android:id="@+id/rowP4"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_glass_card"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:layout_marginBottom="10dp"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:background="@drawable/bg_pill_p4"
-                android:text="P4"
-                android:textColor="#3D2900"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:gravity="center" />
-
-            <EditText
-                android:id="@+id/etPlayer4Name"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:background="@null"
-                android:hint="Player 4 Name"
-                android:textColorHint="#607090"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:inputType="textPersonName|textCapWords" />
-        </LinearLayout>
-
-        <!-- Bot Difficulty (Shown only for 1 Player mode) -->
+        <!-- Bot Difficulty & Match Config Section (Shown ONLY for 1 Player Mode) -->
         <LinearLayout
             android:id="@+id/layoutBotDifficultySection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:layout_marginTop="6dp">
+            android:layout_marginTop="4dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Section Header: 🤖 BOT DIFFICULTY  ...  AI CHALLENGE -->
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="BOT DIFFICULTY"
-                android:textColor="@color/accent_cyan"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1"
-                android:layout_marginBottom="6dp" />
+                android:layout_marginBottom="10dp">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🤖"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="BOT DIFFICULTY"
+                        android:textColor="#00E5FF"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:text="AI CHALLENGE"
+                    android:textColor="#727E96"
+                    android:textSize="10.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06" />
+            </RelativeLayout>
+
+            <!-- 3-Segment Difficulty Toggle Bar -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="44dp"
                 android:background="@drawable/bg_glass_pill"
                 android:orientation="horizontal"
                 android:padding="3dp">
@@ -238,9 +485,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_diff_active_green"
-                    android:text="EASY 😊"
-                    android:textColor="@color/white"
+                    android:background="@android:color/transparent"
+                    android:text="EASY 😌"
+                    android:textColor="#7A8B9E"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -249,9 +496,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:text="MED 😏"
-                    android:textColor="#7A8B9E"
+                    android:background="@drawable/bg_diff_active_pink"
+                    android:text="MED 🤠"
+                    android:textColor="@color/white"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -266,21 +513,147 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <!-- Dynamic Difficulty Description Text -->
+            <TextView
+                android:id="@+id/tvDifficultyDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Medium: Balanced reaction &amp; clever tactics"
+                android:textColor="#8B95B0"
+                android:textSize="11.5sp" />
+
+            <!-- Match Configuration Row: OPPONENT & FORMAT Cards -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <!-- OPPONENT Card -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_info_mini_card"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <FrameLayout
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_bot_icon_frame">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="🤖"
+                            android:textSize="16sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="OPPONENT"
+                            android:textColor="#00E5FF"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.06" />
+
+                        <TextView
+                            android:id="@+id/tvOpponentName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Robi the Bot"
+                            android:textColor="@color/white"
+                            android:textSize="12.5sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- FORMAT Card -->
+                <RelativeLayout
+                    android:id="@+id/btnMatchFormat"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_info_mini_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="10dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="FORMAT"
+                            android:textColor="#C084FC"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.06" />
+
+                        <TextView
+                            android:id="@+id/tvFormatText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Best of 3"
+                            android:textColor="@color/white"
+                            android:textSize="12.5sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Lightning Rounds Badge: ⚡ 3R -->
+                    <TextView
+                        android:id="@+id/tvFormatBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/bg_badge_rounds"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:text="⚡ 3R"
+                        android:textColor="#FFD54F"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
+
+        <!-- Big Neon Action Button: SELECT MINIGAME ➔ -->
+        <Button
+            android:id="@+id/btnPlayerSetupContinue"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_btn_accent_pink"
+            android:text="SELECT MINIGAME ➔"
+            android:textColor="@color/white"
+            android:textSize="15.5sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.06" />
+
     </LinearLayout>
-
-    <!-- Continue Button -->
-    <Button
-        android:id="@+id/btnPlayerSetupContinue"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/btn_accent"
-        android:text="SELECT MINIGAME ➔"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:letterSpacing="0.06" />
-
-</LinearLayout>
-
+</FrameLayout>

@@ -26,6 +26,55 @@
         android:layout_marginBottom="-90dp"
         android:layout_marginEnd="-90dp" />
 
+    <!-- Sparkle Stars in Background -->
+    <ImageView
+        android:id="@+id/splashStarTopLeft"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="120dp"
+        android:src="@drawable/ic_sparkle_star"
+        app:tint="#E8A278"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="Sparkle Star" />
+
+    <ImageView
+        android:id="@+id/splashStarTopRight"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginTop="180dp"
+        android:src="@drawable/ic_sparkle_star"
+        app:tint="#5CE1E6"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="Sparkle Star" />
+
+    <ImageView
+        android:id="@+id/splashStarBottomLeft"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="140dp"
+        android:src="@drawable/ic_sparkle_star"
+        app:tint="#D86290"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="Sparkle Star" />
+
+    <ImageView
+        android:id="@+id/splashStarBottomRight"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="110dp"
+        android:src="@drawable/ic_sparkle_star"
+        app:tint="#FFB800"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="Sparkle Star" />
+
     <!-- Phase 1: Animated Logo Hero Container -->
     <LinearLayout
         android:id="@+id/logoContainer"
@@ -138,36 +187,40 @@
             android:letterSpacing="0.14"
             android:layout_marginTop="3dp" />
 
-        <!-- 4-Color Neon Glass Underline Bar with Merged Rounded Endpoints -->
+        <!-- 4-Color Underline Pills (Same as MainActivity) -->
         <LinearLayout
-            android:layout_width="220dp"
-            android:layout_height="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="5.5dp"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="12dp"
+            android:gravity="center">
 
             <View
-                android:layout_width="0dp"
+                android:id="@+id/splashPill1"
+                android:layout_width="36dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_bar_segment_left" />
+                android:background="@drawable/bg_header_pill_1" />
 
             <View
-                android:layout_width="0dp"
+                android:id="@+id/splashPill2"
+                android:layout_width="36dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/player_2_blue" />
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_header_pill_2" />
 
             <View
-                android:layout_width="0dp"
+                android:id="@+id/splashPill3"
+                android:layout_width="36dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/player_3_green" />
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_header_pill_3" />
 
             <View
-                android:layout_width="0dp"
+                android:id="@+id/splashPill4"
+                android:layout_width="36dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_bar_segment_right" />
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_header_pill_4" />
         </LinearLayout>
     </LinearLayout>
 

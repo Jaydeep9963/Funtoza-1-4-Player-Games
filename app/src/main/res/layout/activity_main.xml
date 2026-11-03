@@ -1,445 +1,772 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@drawable/bg_cosmic_neon"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="12dp"
-    android:paddingBottom="16dp"
     tools:context=".MainActivity">
 
-    <!-- Top Action Bar (Sound + Settings at Top-Right) -->
+    <!-- Background Sparkle Stars Overlay (Identical to reference image) -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <!-- Top-Left Coral/Gold Sparkle Star -->
+        <ImageView
+            android:id="@+id/starTopLeft"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="115dp"
+            android:src="@drawable/ic_sparkle_star"
+            app:tint="#E8A278"
+            android:contentDescription="Sparkle Star" />
+
+        <!-- Mid-Right Cyan Sparkle Star -->
+        <ImageView
+            android:id="@+id/starMidRight"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:orientation="horizontal">
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="158dp"
+            android:src="@drawable/ic_sparkle_star"
+            app:tint="#5CE1E6"
+            android:contentDescription="Sparkle Star" />
 
-            <ImageButton
-                android:id="@+id/btnSoundToggle"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_glass_icon_btn"
-                android:src="@drawable/ic_volume_up"
-                android:tint="@color/white"
-                android:contentDescription="Sound Toggle" />
+        <!-- Bottom-Left Pink Sparkle Star -->
+        <ImageView
+            android:id="@+id/starBottomLeft"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="36dp"
+            android:layout_marginBottom="126dp"
+            android:src="@drawable/ic_sparkle_star"
+            app:tint="#D86290"
+            android:contentDescription="Sparkle Star" />
 
-            <ImageButton
-                android:id="@+id/btnSettings"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/bg_glass_icon_btn"
-                android:src="@drawable/ic_settings"
-                android:tint="@color/white"
-                android:contentDescription="Settings" />
-        </LinearLayout>
+        <!-- Bottom-Right Cyan/Blue Sparkle Star -->
+        <ImageView
+            android:id="@+id/starBottomRight"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="90dp"
+            android:src="@drawable/ic_sparkle_star"
+            app:tint="#5CE1E6"
+            android:contentDescription="Sparkle Star" />
     </RelativeLayout>
 
-    <!-- Brand Header Logo -->
+    <!-- Main Foreground Content Layout -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center">
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="16dp">
 
-        <!-- 1 2 3 4 colored numbers -->
+        <!-- Top Action Bar (Offline & Online Badge on Left, Sound & Settings on Right) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp">
+
+            <!-- Offline & Online Badge -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_badge_offline_online"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="14dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="●"
+                    android:textColor="#00E676"
+                    android:textSize="9sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="OFFLINE - A World of Fun!"
+                    android:textColor="#B0BCD8"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="🎮"
+                    android:textSize="11sp"
+                    android:textColor="#00E676" />
+
+            </LinearLayout>
+
+            <!-- Sound & Settings Buttons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnSoundToggle"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_glass_icon_btn"
+                    android:src="@drawable/ic_volume_up"
+                    app:tint="@color/white"
+                    android:contentDescription="Sound Toggle" />
+
+                <ImageButton
+                    android:id="@+id/btnSettings"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_glass_icon_btn"
+                    android:src="@drawable/ic_settings"
+                    app:tint="@color/white"
+                    android:contentDescription="Settings" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- Brand Header Logo -->
         <LinearLayout
+            android:id="@+id/brandHeaderLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical"
             android:gravity="center">
 
-            <TextView
+            <!-- 1 2 3 4 colored numbers -->
+            <LinearLayout
+                android:id="@+id/digitsLayoutMain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1"
-                android:textColor="@color/player_1_red"
-                android:textSize="36sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2"
-                android:textColor="@color/player_2_blue"
-                android:textSize="36sp"
-                android:textStyle="bold"
-                android:layout_marginStart="4dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3"
-                android:textColor="@color/player_3_green"
-                android:textSize="36sp"
-                android:textStyle="bold"
-                android:layout_marginStart="4dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4"
-                android:textColor="@color/player_4_yellow"
-                android:textSize="36sp"
-                android:textStyle="bold"
-                android:layout_marginStart="4dp" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FUNTOZA"
-            android:textColor="@color/white"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.12"
-            android:shadowColor="@color/accent_cyan"
-            android:shadowDx="0"
-            android:shadowDy="2"
-            android:shadowRadius="12" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PLAYER GAMES"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.08"
-            android:layout_marginTop="-2dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="PLAY TOGETHER. HAVE MORE FUN!"
-            android:textColor="@color/accent_cyan"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.12"
-            android:layout_marginTop="1dp" />
-
-        <!-- 4-Color Underline with Merged Rounded Endpoints -->
-        <LinearLayout
-            android:layout_width="190dp"
-            android:layout_height="4.5dp"
-            android:orientation="horizontal"
-            android:layout_marginTop="6dp">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_bar_segment_left" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/player_2_blue" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/player_3_green" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/bg_bar_segment_right" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- 6 Mode Cards Grid (2 Columns x 3 Rows, Weighted to fit viewport without scrolling) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:orientation="vertical">
-
-        <!-- Row 1: 1 Player & 2 Players -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
-
-            <!-- 1 Player Card -->
-            <FrameLayout
-                android:id="@+id/cardMode1P"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:clickable="true"
-                android:focusable="true">
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
                     android:text="1"
-                    android:textColor="@color/player_1_red"
-                    android:textSize="42sp"
+                    android:textColor="#FF4765"
+                    android:textSize="33sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/bg_tab_p1"
-                    android:gravity="center"
-                    android:text="1 PLAYER"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-            </FrameLayout>
-
-            <!-- 2 Players Card -->
-            <FrameLayout
-                android:id="@+id/cardMode2P"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:clickable="true"
-                android:focusable="true">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
                     android:text="2"
-                    android:textColor="@color/player_2_blue"
-                    android:textSize="42sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/bg_tab_p2"
-                    android:gravity="center"
-                    android:text="2 PLAYERS"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-            </FrameLayout>
-        </LinearLayout>
-
-        <!-- Row 2: 3 Players & 4 Players -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
-
-            <!-- 3 Players Card -->
-            <FrameLayout
-                android:id="@+id/cardMode3P"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:clickable="true"
-                android:focusable="true">
+                    android:textColor="#00B4F0"
+                    android:textSize="33sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
                     android:text="3"
-                    android:textColor="@color/player_3_green"
-                    android:textSize="42sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/bg_tab_p3"
-                    android:gravity="center"
-                    android:text="3 PLAYERS"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-            </FrameLayout>
-
-            <!-- 4 Players Card -->
-            <FrameLayout
-                android:id="@+id/cardMode4P"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:clickable="true"
-                android:focusable="true">
+                    android:textColor="#00E676"
+                    android:textSize="33sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="5dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
                     android:text="4"
-                    android:textColor="@color/player_4_yellow"
-                    android:textSize="42sp"
-                    android:textStyle="bold" />
+                    android:textColor="#FFB800"
+                    android:textSize="33sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="5dp" />
+            </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/bg_tab_p4"
-                    android:gravity="center"
-                    android:text="4 PLAYERS"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-            </FrameLayout>
+            <TextView
+                android:id="@+id/tvFuntozaTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FUNTOZA"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.14"
+                android:shadowColor="@color/accent_cyan"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="10" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PLAYER GAMES"
+                android:textColor="#8E99B8"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.16"
+                android:layout_marginTop="-2dp" />
+
+            <!-- 4-Color Underline Pills -->
+            <LinearLayout
+                android:id="@+id/headerPillsLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="5.5dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp"
+                android:gravity="center">
+
+                <View
+                    android:id="@+id/mainPill1"
+                    android:layout_width="34dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_header_pill_1" />
+
+                <View
+                    android:id="@+id/mainPill2"
+                    android:layout_width="34dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_header_pill_2" />
+
+                <View
+                    android:id="@+id/mainPill3"
+                    android:layout_width="34dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_header_pill_3" />
+
+                <View
+                    android:id="@+id/mainPill4"
+                    android:layout_width="34dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_header_pill_4" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- Row 3: 2vs2 Team & Cup Tournament -->
+        <!-- 6 Mode Cards Grid (3 Rows x 2 Cards) - compact cards with even spacing -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="40dp">
+
+            <!-- =================== ROW 1: 1 PLAYER & 2 PLAYERS =================== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                >
+
+                <!-- 1 Player Card -->
+                <FrameLayout
+                    android:id="@+id/cardMode1P"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_card_cosmic_selector"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <!-- Top Bar: Number 1 on Left, User Badge on Right -->
+                        <RelativeLayout
+                            android:id="@+id/topBar1P"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="0dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:text="1"
+                                android:textColor="#FF4765"
+                                android:textSize="26sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/bg_circle_icon_p1"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_person"
+                                app:tint="#FF4765"
+                                android:contentDescription="1 Player Icon" />
+                        </RelativeLayout>
+
+                        <!-- Bottom Pill: 1 PLAYER -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/bg_pill_btn_p1"
+                            android:gravity="center"
+                            android:text="1 PLAYER"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.04" />
+                    </RelativeLayout>
+                </FrameLayout>
+
+                <!-- 2 Players Card -->
+                <FrameLayout
+                    android:id="@+id/cardMode2P"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_card_cosmic_selector"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <!-- Top Bar: Number 2 on Left, Cloud Badge on Right -->
+                        <RelativeLayout
+                            android:id="@+id/topBar2P"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="0dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:text="2"
+                                android:textColor="#00B4F0"
+                                android:textSize="26sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/bg_circle_icon_p2"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_cloud"
+                                app:tint="#00B4F0"
+                                android:contentDescription="2 Players Icon" />
+                        </RelativeLayout>
+
+                        <!-- Bottom Pill: 2 PLAYERS -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/bg_pill_btn_p2"
+                            android:gravity="center"
+                            android:text="2 PLAYERS"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.04" />
+                    </RelativeLayout>
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- =================== ROW 2: 3 PLAYERS & 4 PLAYERS =================== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp">
+
+                <!-- 3 Players Card -->
+                <FrameLayout
+                    android:id="@+id/cardMode3P"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_card_cosmic_selector"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <!-- Top Bar: Number 3 on Left, Group Badge on Right -->
+                        <RelativeLayout
+                            android:id="@+id/topBar3P"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="0dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:text="3"
+                                android:textColor="#00E676"
+                                android:textSize="26sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/bg_circle_icon_p3"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_group"
+                                app:tint="#00E676"
+                                android:contentDescription="3 Players Icon" />
+                        </RelativeLayout>
+
+                        <!-- Bottom Pill: 3 PLAYERS -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/bg_pill_btn_p3"
+                            android:gravity="center"
+                            android:text="3 PLAYERS"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.04" />
+                    </RelativeLayout>
+                </FrameLayout>
+
+                <!-- 4 Players Card -->
+                <FrameLayout
+                    android:id="@+id/cardMode4P"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_card_cosmic_selector"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <!-- Top Bar: Number 4 on Left, Star Badge on Right -->
+                        <RelativeLayout
+                            android:id="@+id/topBar4P"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="0dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:text="4"
+                                android:textColor="#FFB800"
+                                android:textSize="26sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/bg_circle_icon_p4"
+                                android:padding="5dp"
+                                android:src="@drawable/ic_star"
+                                app:tint="#FFB800"
+                                android:contentDescription="4 Players Icon" />
+                        </RelativeLayout>
+
+                        <!-- Bottom Pill: 4 PLAYERS -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/bg_pill_btn_p4"
+                            android:gravity="center"
+                            android:text="4 PLAYERS"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.04" />
+                    </RelativeLayout>
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- =================== ROW 3: 2vs2 TEAM PLAY & PARTY GAMES =================== -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:orientation="horizontal"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp">
+
+                <!-- 2vs2 Team Play Card -->
+                <FrameLayout
+                    android:id="@+id/cardModeTeam"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_card_cosmic_selector"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <!-- Top Bar: 2 vs 2 on Left, Shield Badge on Right -->
+                        <RelativeLayout
+                            android:id="@+id/topBarTeam"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="16dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentStart="true"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textColor="#FF4765"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="3dp"
+                                    android:layout_marginEnd="3dp"
+                                    android:background="@drawable/bg_badge_offline_online"
+                                    android:paddingStart="5dp"
+                                    android:paddingEnd="5dp"
+                                    android:paddingTop="1dp"
+                                    android:paddingBottom="1dp"
+                                    android:text="VS"
+                                    android:textColor="#B0BCD8"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="2"
+                                    android:textColor="#00B4F0"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/bg_circle_icon_team"
+                                android:padding="4.5dp"
+                                android:src="@drawable/ic_shield"
+                                app:tint="#BF36FE"
+                                android:contentDescription="Team Icon" />
+                        </RelativeLayout>
+
+                        <!-- Bottom Pill: TEAM PLAY -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/bg_pill_btn_team"
+                            android:gravity="center"
+                            android:text="TEAM PLAY"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.04" />
+                    </RelativeLayout>
+                </FrameLayout>
+
+                <!-- Party Games Card -->
+                <FrameLayout
+                    android:id="@+id/cardModeTournament"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_card_cosmic_selector"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <!-- Top Bar: Tokens on Left -->
+                        <RelativeLayout
+                            android:id="@+id/topBarParty"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="16dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
+
+                            <com.aaritlabs.funtoza.view.PartyAvatarsView
+                                android:layout_width="66dp"
+                                android:layout_height="24dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true" />
+                        </RelativeLayout>
+
+                        <!-- Bottom Pill: PARTY GAMES -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="7dp"
+                            android:background="@drawable/bg_pill_btn_party"
+                            android:gravity="center"
+                            android:text="PARTY GAMES"
+                            android:textColor="@color/white"
+                            android:textSize="12.5sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.04" />
+                    </RelativeLayout>
+
+                    <!-- Pixel-Perfect Corner Ribbon Flush with Top and Right Edges -->
+                    <com.aaritlabs.funtoza.view.CornerRibbonView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="top|end" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Bottom Action Button: SHARE WITH FRIENDS! ✦ -->
+        <LinearLayout
+            android:id="@+id/btnShareFriends"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_btn_share_cosmic"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <!-- 2vs2 Team Play Card -->
+            <!-- Glowing White Circular Badge with Send Icon -->
             <FrameLayout
-                android:id="@+id/cardModeTeam"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/bg_circle_share_icon">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="14dp"
-                    android:text="2vs2"
-                    android:textColor="#C084FC"
-                    android:textSize="32sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/bg_tab_purple"
-                    android:gravity="center"
-                    android:text="TEAM PLAY"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_send_share"
+                    app:tint="@color/white"
+                    android:contentDescription="Share Icon" />
             </FrameLayout>
 
-            <!-- Cup Tournament Card -->
-            <FrameLayout
-                android:id="@+id/cardModeTournament"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:clickable="true"
-                android:focusable="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:text="SHARE WITH FRIENDS!"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.06" />
 
-                <!-- Trophy icon -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
-                    android:text="🏆"
-                    android:textSize="36sp" />
-
-                <!-- NEW! Badge -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|end"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_pill_new"
-                    android:text="NEW!"
-                    android:textColor="#3D2900"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/bg_tab_pink"
-                    android:gravity="center"
-                    android:text="CUP TOURNAMENT"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </FrameLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="✦"
+                android:textColor="#FFE082"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
+
     </LinearLayout>
 
-    <!-- Share With Friends Button at Bottom -->
-    <LinearLayout
-        android:id="@+id/btnShareFriends"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/bg_glass_button_share"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true">
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@android:drawable/ic_menu_share"
-            android:tint="@color/white"
-            android:contentDescription="Share" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="SHARE WITH FRIENDS!"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.06" />
-    </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>
