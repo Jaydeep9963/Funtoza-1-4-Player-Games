@@ -57,54 +57,223 @@
         android:focusable="true"
         android:visibility="gone">
 
-        <LinearLayout
+        <!-- Background Sparkle Stars Outside the Pause Card -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/pauseStarTopLeft"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="120dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#E8A278"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseStarTopRight"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="36dp"
+                android:layout_marginTop="145dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#5CE1E6"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseStarTopCenter"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="80dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FFFFFF"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseStarMidLeft"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FFD54F"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseStarMidRight"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="22dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FF6584"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseStarBottomLeft"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="36dp"
+                android:layout_marginBottom="130dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#D86290"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseStarBottomRight"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="110dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#5CE1E6"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseStarBottomCenter"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="70dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FFB800"
+                android:contentDescription="Sparkle Star" />
+        </RelativeLayout>
+
+        <!-- Pause Dialog Box with Inside Sparkles -->
+        <FrameLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/bg_glass_dialog"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="28dp">
+            android:background="@drawable/bg_glass_dialog">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Sparkle Stars Inside the Pause Box -->
+            <ImageView
+                android:id="@+id/pauseBoxStarTopLeft"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="top|start"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="18dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FFD54F"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseBoxStarTopRight"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="18dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#5CE1E6"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseBoxStarMidLeft"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#D86290"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseBoxStarMidRight"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#E8A278"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseBoxStarBottomLeft"
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="18dp"
+                android:layout_marginBottom="14dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#5CE1E6"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/pauseBoxStarBottomRight"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="14dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FFB800"
+                android:contentDescription="Sparkle Star" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="GAME PAUSED"
-                android:textColor="@color/accent_gold"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.08"
-                android:layout_marginBottom="24dp" />
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="28dp">
 
-            <Button
-                android:id="@+id/btnResume"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/btn_accent"
-                android:text="RESUME"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GAME PAUSED"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"
+                    android:layout_marginBottom="24dp" />
 
-            <Button
-                android:id="@+id/btnRestart"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:text="RESTART"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
+                <Button
+                    android:id="@+id/btnResume"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/btn_accent"
+                    android:text="RESUME"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnExitMenu"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:text="EXIT TO MENU"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
-        </LinearLayout>
+                <Button
+                    android:id="@+id/btnRestart"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/bg_glass_card_selector"
+                    android:text="RESTART"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnExitMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_glass_card_selector"
+                    android:text="EXIT TO MENU"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </FrameLayout>
     </FrameLayout>
 
     <!-- Round Winner Frosted Glass Overlay -->
@@ -117,53 +286,152 @@
         android:focusable="true"
         android:visibility="gone">
 
-        <LinearLayout
+        <!-- Star Blast Animation behind the winner popup (NogginTease celebration star blast) -->
+        <com.aaritlabs.funtoza.view.CelebrationStarBlastView
+            android:id="@+id/starBlastView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Winner Dialog Box with Inside Sparkles -->
+        <FrameLayout
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/bg_glass_dialog"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="28dp">
+            android:background="@drawable/bg_glass_dialog">
 
-            <TextView
-                android:id="@+id/tvWinnerEmoji"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🏆"
-                android:textSize="58sp" />
+            <!-- Sparkle Stars Inside the Winner Box -->
+            <ImageView
+                android:id="@+id/winnerBoxStarTopLeft"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="top|start"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FFD54F"
+                android:contentDescription="Sparkle Star" />
 
-            <TextView
-                android:id="@+id/tvWinnerName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PLAYER 1 WINS!"
-                android:textColor="@color/accent_gold"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp" />
+            <ImageView
+                android:id="@+id/winnerBoxStarTopRight"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#5CE1E6"
+                android:contentDescription="Sparkle Star" />
 
-            <Button
-                android:id="@+id/btnNextRound"
+            <ImageView
+                android:id="@+id/winnerBoxStarTrophyLeft"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="38dp"
+                android:layout_marginStart="-55dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FFFFFF"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/winnerBoxStarTrophyRight"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="36dp"
+                android:layout_marginStart="55dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FFD54F"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/winnerBoxStarMidLeft"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginStart="14dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FF2A6D"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/winnerBoxStarMidRight"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="14dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#FFEE58"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/winnerBoxStarBottomLeft"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="bottom|start"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="14dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#5CE1E6"
+                android:contentDescription="Sparkle Star" />
+
+            <ImageView
+                android:id="@+id/winnerBoxStarBottomRight"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="14dp"
+                android:src="@drawable/ic_sparkle_star"
+                app:tint="#D86290"
+                android:contentDescription="Sparkle Star" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/btn_accent"
-                android:text="CONTINUE"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="28dp">
 
-            <Button
-                android:id="@+id/btnWinnerExit"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:text="EXIT TO MENU"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvWinnerEmoji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏆"
+                    android:textSize="58sp" />
+
+                <TextView
+                    android:id="@+id/tvWinnerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PLAYER 1 WINS!"
+                    android:textColor="@color/accent_gold"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp" />
+
+                <Button
+                    android:id="@+id/btnNextRound"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/btn_accent"
+                    android:text="CONTINUE"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnWinnerExit"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_glass_card_selector"
+                    android:text="EXIT TO MENU"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </FrameLayout>
     </FrameLayout>
 
 </FrameLayout>

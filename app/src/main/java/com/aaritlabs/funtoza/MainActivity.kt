@@ -60,8 +60,17 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hideSystemUI()
-        // Update sound icon state based on SoundManager
-        btnSoundToggle.alpha = if (soundManager.isSoundEnabled && !soundManager.isMuted) 1.0f else 0.4f
+        updateSoundButtonState()
+    }
+
+    private fun updateSoundButtonState() {
+        if (soundManager.isMuted) {
+            btnSoundToggle.setImageResource(R.drawable.ic_volume_off)
+            btnSoundToggle.alpha = 0.55f
+        } else {
+            btnSoundToggle.setImageResource(R.drawable.ic_volume_up)
+            btnSoundToggle.alpha = 1.0f
+        }
     }
 
     private fun hideSystemUI() {
@@ -88,6 +97,9 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.starMidRight)?.let { starViews.add(it) }
         findViewById<View>(R.id.starBottomLeft)?.let { starViews.add(it) }
         findViewById<View>(R.id.starBottomRight)?.let { starViews.add(it) }
+        findViewById<View>(R.id.starMidLeft)?.let { starViews.add(it) }
+        findViewById<View>(R.id.starCenterRight)?.let { starViews.add(it) }
+        findViewById<View>(R.id.starTopRight)?.let { starViews.add(it) }
 
         findViewById<View>(R.id.mainPill1)?.let { headerPills.add(it) }
         findViewById<View>(R.id.mainPill2)?.let { headerPills.add(it) }
@@ -96,9 +108,11 @@ class MainActivity : AppCompatActivity() {
 
         funtozaTitle = findViewById(R.id.tvFuntozaTitle)
 
+        updateSoundButtonState()
+
         btnSoundToggle.setOnClickListener {
             soundManager.isMuted = !soundManager.isMuted
-            btnSoundToggle.alpha = if (soundManager.isMuted) 0.4f else 1.0f
+            updateSoundButtonState()
             if (!soundManager.isMuted) {
                 soundManager.play(SoundManager.SoundType.TAP)
             }

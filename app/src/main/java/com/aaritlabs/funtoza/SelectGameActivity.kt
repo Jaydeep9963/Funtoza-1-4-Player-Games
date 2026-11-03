@@ -1,7 +1,10 @@
 package com.aaritlabs.funtoza
 
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -18,6 +21,9 @@ class SelectGameActivity : AppCompatActivity() {
     private var playerCount: Int = 2
     private var botDifficulty: Int = 1
     private var playerNames: ArrayList<String> = arrayListOf()
+
+    private val starViews = mutableListOf<View>()
+    private val activeAnimators = mutableListOf<ValueAnimator>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +44,16 @@ class SelectGameActivity : AppCompatActivity() {
         val cardSnake = findViewById<LinearLayout>(R.id.cardSelectSnake)
         val cardSumo = findViewById<LinearLayout>(R.id.cardSelectSumo)
         val cardKnife = findViewById<LinearLayout>(R.id.cardSelectKnife)
+        val cardTicTacToe = findViewById<LinearLayout>(R.id.cardSelectTicTacToe)
+
+        findViewById<View>(R.id.selectStarTopLeft)?.let { starViews.add(it) }
+        findViewById<View>(R.id.selectStarTopRight)?.let { starViews.add(it) }
+        findViewById<View>(R.id.selectStarMidLeft)?.let { starViews.add(it) }
+        findViewById<View>(R.id.selectStarBottomLeft)?.let { starViews.add(it) }
+        findViewById<View>(R.id.selectStarBottomRight)?.let { starViews.add(it) }
+
+        // Tic Tac Toe is exclusively for 1 & 2 players
+        cardTicTacToe.visibility = if (playerCount <= 2) View.VISIBLE else View.GONE
 
         // Set matchup subtitle
         tvMatchup.text = when {
@@ -71,6 +87,44 @@ class SelectGameActivity : AppCompatActivity() {
         cardSnake.setOnClickListener { launchGame(GameType.NEON_SNAKE) }
         cardSumo.setOnClickListener { launchGame(GameType.SUMO_BUMPER) }
         cardKnife.setOnClickListener { launchGame(GameType.TARGET_BLITZ) }
+        cardTicTacToe.setOnClickListener { launchGame(GameType.TIC_TAC_TOE) }
+
+        startSparkleStarsAnimation()
+    }
+
+    private fun startSparkleStarsAnimation() {
+        val starConfigs = listOf(
+            Triple(1600L, 0L, 25f),
+            Triple(2000L, 500L, -35f),
+            Triple(1800L, 1000L, 40f),
+            Triple(2200L, 750L, -25f),
+            Triple(1700L, 250L, 30f)
+        )
+
+        starViews.forEachIndexed { index, star ->
+            val (duration, startDelay, rotationAngle) = starConfigs[index % starConfigs.size]
+            star.alpha = 0.25f
+            star.scaleX = 0.75f
+            star.scaleY = 0.75f
+
+            val animator = ValueAnimator.ofFloat(0f, 1f).apply {
+                this.duration = duration
+                this.startDelay = startDelay
+                repeatMode = ValueAnimator.REVERSE
+                repeatCount = ValueAnimator.INFINITE
+                interpolator = AccelerateDecelerateInterpolator()
+                addUpdateListener { va ->
+                    val frac = va.animatedValue as Float
+                    star.alpha = 0.25f + (0.75f * frac)
+                    val scale = 0.75f + (0.45f * frac)
+                    star.scaleX = scale
+                    star.scaleY = scale
+                    star.rotation = rotationAngle * frac
+                }
+                start()
+            }
+            activeAnimators.add(animator)
+        }
     }
 
     private fun launchGame(gameType: GameType) {
@@ -84,6 +138,17 @@ class SelectGameActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    override fun onResume() {
+        super.onResume()
+        hideSystemUI()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activeAnimators.forEach { it.cancel() }
+        activeAnimators.clear()
+    }
+
     private fun hideSystemUI() {
         try {
             val controller = WindowCompat.getInsetsController(window, window.decorView)
@@ -92,4 +157,3 @@ class SelectGameActivity : AppCompatActivity() {
         } catch (_: Exception) {}
     }
 }
-

@@ -53,6 +53,9 @@ class SplashActivity : AppCompatActivity() {
         findViewById<View>(R.id.splashStarTopRight)?.let { splashStars.add(it) }
         findViewById<View>(R.id.splashStarBottomLeft)?.let { splashStars.add(it) }
         findViewById<View>(R.id.splashStarBottomRight)?.let { splashStars.add(it) }
+        findViewById<View>(R.id.splashStarMidLeft)?.let { splashStars.add(it) }
+        findViewById<View>(R.id.splashStarMidRight)?.let { splashStars.add(it) }
+        findViewById<View>(R.id.splashStarTopCenter)?.let { splashStars.add(it) }
 
         // Initialize sound engine asynchronously
         Thread {

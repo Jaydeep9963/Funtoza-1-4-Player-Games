@@ -63,6 +63,45 @@
             android:src="@drawable/ic_sparkle_star"
             app:tint="#5CE1E6"
             android:contentDescription="Sparkle Star" />
+
+        <!-- Mid-Left Gold Sparkle Star -->
+        <ImageView
+            android:id="@+id/starMidLeft"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="360dp"
+            android:src="@drawable/ic_sparkle_star"
+            app:tint="#FFD54F"
+            android:contentDescription="Sparkle Star" />
+
+        <!-- Center-Right Pink Sparkle Star -->
+        <ImageView
+            android:id="@+id/starCenterRight"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="430dp"
+            android:src="@drawable/ic_sparkle_star"
+            app:tint="#FF6584"
+            android:contentDescription="Sparkle Star" />
+
+        <!-- Top-Right Cyan Sparkle Star -->
+        <ImageView
+            android:id="@+id/starTopRight"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="85dp"
+            android:layout_marginTop="75dp"
+            android:src="@drawable/ic_sparkle_star"
+            app:tint="#5CE1E6"
+            android:contentDescription="Sparkle Star" />
     </RelativeLayout>
 
     <!-- Main Foreground Content Layout -->

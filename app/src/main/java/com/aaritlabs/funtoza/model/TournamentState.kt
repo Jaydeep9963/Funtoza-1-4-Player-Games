@@ -7,7 +7,7 @@ data class TournamentState(
     val totalRounds: Int = 5,
     var currentRound: Int = 1,
     val scores: MutableMap<PlayerId, Int> = mutableMapOf(),
-    val gamePlaylist: List<GameType> = GameType.getAllGames().shuffled()
+    val gamePlaylist: List<GameType> = GameType.getGamesForPlayerCount(totalPlayers).shuffled()
 ) : Serializable {
 
     init {
@@ -31,4 +31,3 @@ data class TournamentState(
         return scores.toList().sortedByDescending { it.second }
     }
 }
-
