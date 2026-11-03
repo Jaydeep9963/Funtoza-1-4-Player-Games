@@ -1,0 +1,46 @@
+[
+    {
+        "merged": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-mergeDebugResources-33:\\layout\\activity_splash.xml",
+        "source": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-main-36:\\layout\\activity_splash.xml"
+    },
+    {
+        "merged": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-mergeDebugResources-33:\\layout\\activity_tournament.xml",
+        "source": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-main-36:\\layout\\activity_tournament.xml"
+    },
+    {
+        "merged": "com.aaritlabs.funtoza.app-mergeDebugResources-33:/layout/activity_settings.xml",
+        "source": "com.aaritlabs.funtoza.app-main-36:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-mergeDebugResources-33:\\layout\\dialog_bot_difficulty.xml",
+        "source": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-main-36:\\layout\\dialog_bot_difficulty.xml"
+    },
+    {
+        "merged": "com.aaritlabs.funtoza.app-mergeDebugResources-33:/layout/dialog_player_names.xml",
+        "source": "com.aaritlabs.funtoza.app-main-36:/layout/dialog_player_names.xml"
+    },
+    {
+        "merged": "com.aaritlabs.funtoza.app-mergeDebugResources-33:/layout/activity_select_game.xml",
+        "source": "com.aaritlabs.funtoza.app-main-36:/layout/activity_select_game.xml"
+    },
+    {
+        "merged": "com.aaritlabs.funtoza.app-mergeDebugResources-33:/layout/activity_splash.xml",
+        "source": "com.aaritlabs.funtoza.app-main-36:/layout/activity_splash.xml"
+    },
+    {
+        "merged": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-mergeDebugResources-33:\\layout\\activity_game.xml",
+        "source": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-main-36:\\layout\\activity_game.xml"
+    },
+    {
+        "merged": "com.aaritlabs.funtoza.app-mergeDebugResources-33:/layout/activity_main.xml",
+        "source": "com.aaritlabs.funtoza.app-main-36:/layout/activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-mergeDebugResources-33:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-main-36:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-mergeDebugResources-33:\\layout\\item_game_card.xml",
+        "source": "C:\\Users\\AM\\.gradle\\daemon\\8.11.1\\com.aaritlabs.funtoza.app-main-36:\\layout\\item_game_card.xml"
+    }
+]

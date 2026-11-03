@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent_cyan">#00F0FF</color>
+    <color name="accent_gold">#FFD600</color>
+    <color name="accent_pink">#FF007A</color>
+    <color name="bg_card">#1A1238</color>
+    <color name="bg_card_stroke">#6837C9</color>
+    <color name="bg_dark">#0B081E</color>
+    <color name="bg_dark_card">#1A1238</color>
+    <color name="bg_dark_deep">#070414</color>
+    <color name="black">#FF000000</color>
+    <color name="neon_cyan">#00F0FF</color>
+    <color name="neon_gold">#FFD600</color>
+    <color name="neon_pink">#FF007A</color>
+    <color name="neon_purple">#BD00FF</color>
+    <color name="player_1_red">#FF2A6D</color>
+    <color name="player_1_red_dark">#B31245</color>
+    <color name="player_2_blue">#0084FF</color>
+    <color name="player_2_blue_dark">#004DB3</color>
+    <color name="player_3_green">#00E676</color>
+    <color name="player_3_green_dark">#00994C</color>
+    <color name="player_4_yellow">#FFD600</color>
+    <color name="player_4_yellow_dark">#B39500</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#A9B2D8</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="app_name">Funtoza</string>
+    <string name="exit_to_menu">Exit to Menu</string>
+    <string name="game_knife">Target Blitz</string>
+    <string name="game_knife_desc">Throw knives at the spinning wheel!</string>
+    <string name="game_snake">Neon Snake</string>
+    <string name="game_snake_desc">Light-trail Tron battle. Don\'t crash!</string>
+    <string name="game_soccer">Finger Soccer</string>
+    <string name="game_soccer_desc">Air hockey mayhem with explosive goals!</string>
+    <string name="game_sumo">Sumo Bumper</string>
+    <string name="game_sumo_desc">Bump rivals off the electric arena!</string>
+    <string name="game_tank">Tank Battle</string>
+    <string name="game_tank_desc">Bounce bullets, destroy crates, survive!</string>
+    <string name="mode_1_player">1 PLAYER (VS BOTS)</string>
+    <string name="mode_2_player">2 PLAYERS (DUEL)</string>
+    <string name="mode_3_player">3 PLAYERS (TRIO)</string>
+    <string name="mode_4_player">4 PLAYERS (CHAOS)</string>
+    <string name="mode_tournament">CUP TOURNAMENT</string>
+    <string name="next_game">Next Game</string>
+    <string name="paused">GAME PAUSED</string>
+    <string name="restart">Restart</string>
+    <string name="resume">Resume</string>
+    <string name="round">ROUND</string>
+    <string name="score">Score</string>
+    <string name="tagline">1, 2, 3, 4 Player Offline Party Battles</string>
+    <string name="tournament_champion">%s IS THE CHAMPION!</string>
+    <string name="winner_announcement">%s WINS!</string>
+    <style name="Theme.Funtoza" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/accent_pink</item>
+        <item name="colorPrimaryVariant">@color/accent_cyan</item>
+        <item name="colorOnPrimary">@color/white</item>
+        
+        
+        <item name="android:statusBarColor">@color/bg_dark</item>
+        <item name="android:navigationBarColor">@color/bg_dark</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+        
+        
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+</resources>
