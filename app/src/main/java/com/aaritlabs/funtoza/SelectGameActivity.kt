@@ -47,6 +47,7 @@ class SelectGameActivity : AppCompatActivity() {
         val cardSnakesAndLadders = findViewById<LinearLayout>(R.id.cardSelectSnakesAndLadders)
         val cardKnife = findViewById<LinearLayout>(R.id.cardSelectKnife)
         val cardTicTacToe = findViewById<LinearLayout>(R.id.cardSelectTicTacToe)
+        val cardOops = findViewById<LinearLayout>(R.id.cardSelectOops)
 
         if (playerCount == 1) {
             tvSelectSnakeTitle?.text = "SLITHER SNAKE"
@@ -98,6 +99,7 @@ class SelectGameActivity : AppCompatActivity() {
         cardSnakesAndLadders.setOnClickListener { launchGame(GameType.SNAKES_AND_LADDERS) }
         cardKnife.setOnClickListener { launchGame(GameType.TARGET_BLITZ) }
         cardTicTacToe.setOnClickListener { launchGame(GameType.TIC_TAC_TOE) }
+        cardOops.setOnClickListener { launchGame(GameType.OOPS) }
 
         startSparkleStarsAnimation()
     }

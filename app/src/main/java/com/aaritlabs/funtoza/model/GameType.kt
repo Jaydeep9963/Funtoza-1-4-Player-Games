@@ -48,6 +48,13 @@ enum class GameType(
         "❌",
         "#00E5FF",
         2
+    ),
+    OOPS(
+        "Oops!",
+        "Draw cards, race pawns to Castle, slide across sweeps, and bump rivals back with 'Oops!'",
+        "🃏",
+        "#FF9500",
+        4
     );
 
     companion object {

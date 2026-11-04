@@ -343,6 +343,7 @@ class GameActivity : AppCompatActivity() {
             GameType.SNAKES_AND_LADDERS -> SnakesAndLaddersEngine(this, playerCount, soundManager, botDifficulty)
             GameType.TARGET_BLITZ -> KnifeHitEngine(this, playerCount, soundManager, botDifficulty)
             GameType.TIC_TAC_TOE -> TicTacToeEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.OOPS -> OopsEngine(this, playerCount, soundManager, botDifficulty)
         }
 
         engine.playerNames = playerNames
