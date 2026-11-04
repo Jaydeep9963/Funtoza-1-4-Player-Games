@@ -42,9 +42,19 @@ class SelectGameActivity : AppCompatActivity() {
         val cardTank = findViewById<LinearLayout>(R.id.cardSelectTank)
         val cardSoccer = findViewById<LinearLayout>(R.id.cardSelectSoccer)
         val cardSnake = findViewById<LinearLayout>(R.id.cardSelectSnake)
+        val tvSelectSnakeTitle = findViewById<TextView>(R.id.tvSelectSnakeTitle)
+        val tvSelectSnakeDesc = findViewById<TextView>(R.id.tvSelectSnakeDesc)
         val cardSumo = findViewById<LinearLayout>(R.id.cardSelectSumo)
         val cardKnife = findViewById<LinearLayout>(R.id.cardSelectKnife)
         val cardTicTacToe = findViewById<LinearLayout>(R.id.cardSelectTicTacToe)
+
+        if (playerCount == 1) {
+            tvSelectSnakeTitle?.text = "SLITHER SNAKE"
+            tvSelectSnakeDesc?.text = "Slither & grow! Eat glowing pellets, boost & defeat rival worms!"
+        } else {
+            tvSelectSnakeTitle?.text = "NEON SNAKE"
+            tvSelectSnakeDesc?.text = "Tron-style light trails! Cut off opponents and survive!"
+        }
 
         findViewById<View>(R.id.selectStarTopLeft)?.let { starViews.add(it) }
         findViewById<View>(R.id.selectStarTopRight)?.let { starViews.add(it) }

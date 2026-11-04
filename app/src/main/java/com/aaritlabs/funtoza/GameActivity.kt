@@ -1,5 +1,7 @@
 package com.aaritlabs.funtoza
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +11,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -45,6 +48,20 @@ class GameActivity : AppCompatActivity() {
     // Inside sparkle stars for winner dialog
     private val winnerBoxStarViews = mutableListOf<View>()
     private val winnerBoxAnimators = mutableListOf<ValueAnimator>()
+
+    // Snake Game Over Modal Views & Animators
+    private lateinit var snakeGameOverOverlay: View
+    private lateinit var tvSnakeFinalScore: TextView
+    private lateinit var tvSnakeFinalRank: TextView
+    private lateinit var btnSnakeWatchAdContinue: Button
+    private lateinit var btnSnakePlayAgain: Button
+    private lateinit var btnSnakeExitBack: Button
+    private lateinit var adSimulatedOverlay: View
+    private lateinit var tvAdCountdown: TextView
+    private lateinit var pbAdProgress: ProgressBar
+    private val snakeGameOverStarViews = mutableListOf<View>()
+    private val snakeGameOverAnimators = mutableListOf<ValueAnimator>()
+    private var adAnimator: ValueAnimator? = null
 
     private lateinit var soundManager: SoundManager
     private var gameType: GameType = GameType.TANK_BATTLE
@@ -118,6 +135,33 @@ class GameActivity : AppCompatActivity() {
         findViewById<View>(R.id.winnerBoxStarBottomLeft)?.let { winnerBoxStarViews.add(it) }
         findViewById<View>(R.id.winnerBoxStarBottomRight)?.let { winnerBoxStarViews.add(it) }
 
+        // Snake Game Over Modal
+        snakeGameOverOverlay = findViewById(R.id.snakeGameOverOverlay)
+        tvSnakeFinalScore = findViewById(R.id.tvSnakeFinalScore)
+        tvSnakeFinalRank = findViewById(R.id.tvSnakeFinalRank)
+        btnSnakeWatchAdContinue = findViewById(R.id.btnSnakeWatchAdContinue)
+        btnSnakePlayAgain = findViewById(R.id.btnSnakePlayAgain)
+        btnSnakeExitBack = findViewById(R.id.btnSnakeExitBack)
+
+        adSimulatedOverlay = findViewById(R.id.adSimulatedOverlay)
+        tvAdCountdown = findViewById(R.id.tvAdCountdown)
+        pbAdProgress = findViewById(R.id.pbAdProgress)
+
+        findViewById<View>(R.id.snakeGameOverStar1)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverStar2)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverStar3)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverStar4)?.let { snakeGameOverStarViews.add(it) }
+
+        // Inside Snake Game Over Box Stars
+        findViewById<View>(R.id.snakeGameOverBoxStarTopLeft)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverBoxStarTopRight)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverBoxStarSkullLeft)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverBoxStarSkullRight)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverBoxStarMidLeft)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverBoxStarMidRight)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverBoxStarBottomLeft)?.let { snakeGameOverStarViews.add(it) }
+        findViewById<View>(R.id.snakeGameOverBoxStarBottomRight)?.let { snakeGameOverStarViews.add(it) }
+
         tvCurrentGameTitle.text = gameType.title.uppercase()
 
         btnPause.setOnClickListener {
@@ -138,9 +182,13 @@ class GameActivity : AppCompatActivity() {
             soundManager.play(SoundManager.SoundType.TAP)
             stopPauseSparklesAnimation()
             stopWinnerBoxSparklesAnimation()
+            stopSnakeGameOverSparklesAnimation()
+            adAnimator?.cancel()
             starBlastView.stopBlast()
             pauseOverlay.visibility = View.GONE
             winnerOverlay.visibility = View.GONE
+            snakeGameOverOverlay.visibility = View.GONE
+            adSimulatedOverlay.visibility = View.GONE
             startGame()
             gameSurfaceView.resumeGame()
         }
@@ -149,6 +197,8 @@ class GameActivity : AppCompatActivity() {
             soundManager.play(SoundManager.SoundType.TAP)
             stopPauseSparklesAnimation()
             stopWinnerBoxSparklesAnimation()
+            stopSnakeGameOverSparklesAnimation()
+            adAnimator?.cancel()
             starBlastView.stopBlast()
             finish()
         }
@@ -271,7 +321,19 @@ class GameActivity : AppCompatActivity() {
         val engine: BaseGameEngine = when (gameType) {
             GameType.TANK_BATTLE -> TankBattleEngine(this, playerCount, soundManager)
             GameType.FINGER_SOCCER -> SoccerEngine(this, playerCount, soundManager)
-            GameType.NEON_SNAKE -> SnakeEngine(this, playerCount, soundManager)
+            GameType.NEON_SNAKE -> {
+                if (playerCount == 1) {
+                    val slither = SlitherSnakeEngine(this, playerCount, soundManager, botDifficulty)
+                    slither.onPlayerDiedListener = { score, rank ->
+                        runOnUiThread {
+                            showSnakeGameOverDialog(score, rank, slither)
+                        }
+                    }
+                    slither
+                } else {
+                    SnakeEngine(this, playerCount, soundManager)
+                }
+            }
             GameType.SUMO_BUMPER -> SumoEngine(this, playerCount, soundManager)
             GameType.TARGET_BLITZ -> KnifeHitEngine(this, playerCount, soundManager)
             GameType.TIC_TAC_TOE -> TicTacToeEngine(this, playerCount, soundManager, botDifficulty)
@@ -316,10 +378,117 @@ class GameActivity : AppCompatActivity() {
         startWinnerBoxSparklesAnimation()
     }
 
+    private fun showSnakeGameOverDialog(score: Int, rank: Int, slitherEngine: SlitherSnakeEngine) {
+        tvSnakeFinalScore.text = "$score"
+        tvSnakeFinalRank.text = "#$rank"
+
+        snakeGameOverOverlay.visibility = View.VISIBLE
+        startSnakeGameOverSparklesAnimation()
+        gameSurfaceView.pauseGame()
+
+        btnSnakeWatchAdContinue.setOnClickListener {
+            soundManager.play(SoundManager.SoundType.TAP)
+            playRewardedAdSimulation(slitherEngine)
+        }
+
+        btnSnakePlayAgain.setOnClickListener {
+            soundManager.play(SoundManager.SoundType.TAP)
+            stopSnakeGameOverSparklesAnimation()
+            adAnimator?.cancel()
+            adSimulatedOverlay.visibility = View.GONE
+            snakeGameOverOverlay.visibility = View.GONE
+            startGame()
+            gameSurfaceView.resumeGame()
+        }
+
+        btnSnakeExitBack.setOnClickListener {
+            soundManager.play(SoundManager.SoundType.TAP)
+            stopSnakeGameOverSparklesAnimation()
+            adAnimator?.cancel()
+            finish()
+        }
+    }
+
+    private fun playRewardedAdSimulation(slitherEngine: SlitherSnakeEngine) {
+        adSimulatedOverlay.visibility = View.VISIBLE
+        pbAdProgress.progress = 0
+        tvAdCountdown.text = "Reviving your snake in 3s..."
+
+        adAnimator?.cancel()
+        adAnimator = ValueAnimator.ofInt(0, 100).apply {
+            duration = 2600L
+            addUpdateListener { va ->
+                val prog = va.animatedValue as Int
+                pbAdProgress.progress = prog
+                val remainingSec = ((100 - prog) * 2.6f / 100f).toInt() + 1
+                tvAdCountdown.text = "Reviving your snake in ${remainingSec}s..."
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    soundManager.play(SoundManager.SoundType.GOAL)
+                    adSimulatedOverlay.visibility = View.GONE
+                    snakeGameOverOverlay.visibility = View.GONE
+                    stopSnakeGameOverSparklesAnimation()
+                    slitherEngine.revivePlayer()
+                    gameSurfaceView.resumeGame()
+                }
+            })
+            start()
+        }
+    }
+
+    private fun startSnakeGameOverSparklesAnimation() {
+        stopSnakeGameOverSparklesAnimation()
+        val starConfigs = listOf(
+            Triple(1500L, 0L, 30f),
+            Triple(1800L, 300L, -35f),
+            Triple(1600L, 650L, 25f),
+            Triple(1900L, 150L, -30f),
+            Triple(1700L, 450L, 35f),
+            Triple(2000L, 800L, -25f),
+            Triple(1650L, 250L, 20f),
+            Triple(1850L, 550L, -40f)
+        )
+
+        snakeGameOverStarViews.forEachIndexed { index, star ->
+            val (duration, startDelay, rotationAngle) = starConfigs[index % starConfigs.size]
+            star.alpha = 0.25f
+            star.scaleX = 0.75f
+            star.scaleY = 0.75f
+
+            val animator = ValueAnimator.ofFloat(0f, 1f).apply {
+                this.duration = duration
+                this.startDelay = startDelay
+                repeatMode = ValueAnimator.REVERSE
+                repeatCount = ValueAnimator.INFINITE
+                interpolator = AccelerateDecelerateInterpolator()
+                addUpdateListener { va ->
+                    val frac = va.animatedValue as Float
+                    star.alpha = 0.25f + (0.75f * frac)
+                    val scale = 0.75f + (0.45f * frac)
+                    star.scaleX = scale
+                    star.scaleY = scale
+                    star.rotation = rotationAngle * frac
+                }
+                start()
+            }
+            snakeGameOverAnimators.add(animator)
+        }
+    }
+
+    private fun stopSnakeGameOverSparklesAnimation() {
+        snakeGameOverAnimators.forEach { it.cancel() }
+        snakeGameOverAnimators.clear()
+    }
+
     override fun onResume() {
         super.onResume()
         hideSystemUI()
-        if (pauseOverlay.visibility != View.VISIBLE && winnerOverlay.visibility != View.VISIBLE) {
+        if (pauseOverlay.visibility != View.VISIBLE &&
+            winnerOverlay.visibility != View.VISIBLE &&
+            snakeGameOverOverlay.visibility != View.VISIBLE &&
+            adSimulatedOverlay.visibility != View.VISIBLE
+        ) {
             gameSurfaceView.resumeGame()
         }
     }
@@ -328,6 +497,8 @@ class GameActivity : AppCompatActivity() {
         super.onPause()
         stopPauseSparklesAnimation()
         stopWinnerBoxSparklesAnimation()
+        stopSnakeGameOverSparklesAnimation()
+        adAnimator?.cancel()
         starBlastView.stopBlast()
         gameSurfaceView.pauseGame()
     }
@@ -336,6 +507,8 @@ class GameActivity : AppCompatActivity() {
         super.onDestroy()
         stopPauseSparklesAnimation()
         stopWinnerBoxSparklesAnimation()
+        stopSnakeGameOverSparklesAnimation()
+        adAnimator?.cancel()
     }
 
     private fun hideSystemUI() {

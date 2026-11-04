@@ -88,11 +88,11 @@ class TicTacToeEngine(
     private fun computeBoardGeometry() {
         if (width <= 0f || height <= 0f) return
 
-        cardH = 68f * density
-        cardW = (width - 32f * density).coerceAtMost(420f * density)
+        cardH = 74f * density
+        cardW = (width - 32f * density).coerceAtMost(500f * density)
 
         // Clear top HUD margin so top player card never collides with the pause button & title
-        val topHudMargin = 85f * density
+        val topHudMargin = 82f * density
         val bottomMargin = 26f * density
 
         topCardTop = topHudMargin + 8f * density
@@ -102,12 +102,12 @@ class TicTacToeEngine(
         bottomCardTop = bottomCardBottom - cardH
 
         // Available vertical space for the 3x3 board
-        val availableHeight = (bottomCardTop - topCardBottom - 28f * density).coerceAtLeast(100f)
-        val maxBoardW = width - 40f * density
+        val availableMiddleSpace = (bottomCardTop - topCardBottom).coerceAtLeast(120f)
+        val maxBoardWidth = width - 36f * density
 
-        boardSize = availableHeight.coerceAtMost(maxBoardW).coerceAtMost(380f * density)
+        boardSize = (availableMiddleSpace - 32f * density).coerceAtMost(maxBoardWidth).coerceAtMost(370f * density)
         boardLeft = (width - boardSize) / 2f
-        boardTop = topCardBottom + 14f * density + (availableHeight - boardSize) / 2f
+        boardTop = topCardBottom + (availableMiddleSpace - boardSize) / 2f
         cellSize = boardSize / 3f
     }
 
@@ -597,101 +597,69 @@ class TicTacToeEngine(
         if (isTurn) {
             val glowPulse = 0.5f + 0.5f * sin(pulseTimer * 4.5f)
             paint.style = Paint.Style.STROKE
-            paint.strokeWidth = 4f * density
+            paint.strokeWidth = 3.5f * density
             paint.color = playerColor
-            paint.alpha = (glowPulse * 75).toInt()
+            paint.alpha = (glowPulse * 90).toInt()
             val haloRect = RectF(
                 cardLeft - 2f * density,
                 cardTop - 2f * density,
                 cardLeft + cardW + 2f * density,
                 cardTop + cardH + 2f * density
             )
-            canvas.drawRoundRect(haloRect, 20f * density, 20f * density, paint)
+            canvas.drawRoundRect(haloRect, 22f * density, 22f * density, paint)
         }
 
-        // 2. Main Glass Card Body
+        // 2. Main Glass Card Body (matching Setup Screen dark aesthetic)
         paint.style = Paint.Style.FILL
-        paint.color = if (isTurn) Color.parseColor("#221838") else Color.parseColor("#141026")
-        canvas.drawRoundRect(cardRect, 18f * density, 18f * density, paint)
+        paint.color = if (isTurn) Color.parseColor("#1F1836") else Color.parseColor("#150F28")
+        paint.alpha = 255
+        canvas.drawRoundRect(cardRect, 20f * density, 20f * density, paint)
 
         // 3. Card Border
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = if (isTurn) 2.2f * density else 1.2f * density
-        paint.color = if (isTurn) playerColor else Color.parseColor("#2C224C")
+        paint.color = if (isTurn) playerColor else Color.parseColor("#2E234E")
         paint.alpha = if (isTurn) 255 else 180
-        canvas.drawRoundRect(cardRect, 18f * density, 18f * density, paint)
+        canvas.drawRoundRect(cardRect, 20f * density, 20f * density, paint)
 
-        // 4. Left Avatar Squircle Badge
-        val avatarSize = 44f * density
+        // 4. Left Avatar Squircle Badge (Matching 2 Players Setup Dialog)
+        val avatarSize = 48f * density
         val avatarL = cardLeft + 12f * density
         val avatarT = cardTop + (cardH - avatarSize) / 2f
         val avatarRect = RectF(avatarL, avatarT, avatarL + avatarSize, avatarT + avatarSize)
 
+        // Solid vibrant avatar fill
         paint.style = Paint.Style.FILL
-        paint.color = (playerColor and 0x00FFFFFF) or 0x24000000
-        canvas.drawRoundRect(avatarRect, 13f * density, 13f * density, paint)
-
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 1.8f * density
         paint.color = playerColor
-        canvas.drawRoundRect(avatarRect, 13f * density, 13f * density, paint)
+        paint.alpha = 255
+        canvas.drawRoundRect(avatarRect, 14f * density, 14f * density, paint)
 
-        // Draw symbol / avatar icon inside badge
+        // Avatar icon / text inside badge
         paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.CENTER
         val avatarCenterX = avatarRect.centerX()
         val avatarCenterY = avatarRect.centerY()
 
         if (isBot) {
-            paint.textSize = 21f * density
+            paint.textSize = 24f * density
+            paint.color = Color.WHITE
             val fm = paint.fontMetrics
             val baseline = avatarCenterY - (fm.ascent + fm.descent) / 2f
             canvas.drawText("🤖", avatarCenterX, baseline, paint)
         } else {
-            val markChar = if (player.id == PlayerId.PLAYER_1) "X" else "O"
-            paint.textSize = 22f * density
+            val markText = if (player.id == PlayerId.PLAYER_1) "P1" else "P2"
+            paint.textSize = 19f * density
             paint.isFakeBoldText = true
-            paint.color = playerColor
+            paint.color = Color.WHITE
             val fm = paint.fontMetrics
             val baseline = avatarCenterY - (fm.ascent + fm.descent) / 2f
-            canvas.drawText(markChar, avatarCenterX, baseline, paint)
+            canvas.drawText(markText, avatarCenterX, baseline, paint)
             paint.isFakeBoldText = false
         }
 
-        // 5. Player Name & Subtitle
-        paint.textAlign = Paint.Align.LEFT
-        val textStartX = avatarL + avatarSize + 12f * density
-
-        // Name
-        paint.color = Color.WHITE
-        paint.textSize = 16f * density
-        paint.isFakeBoldText = true
-        val nameText = if (isBot) "Robi the Bot" else getPlayerDisplayName(player)
-        val nameBaseline = cardTop + cardH * 0.44f
-        canvas.drawText(nameText, textStartX, nameBaseline, paint)
-        paint.isFakeBoldText = false
-
-        // Subtitle (role & symbol)
-        paint.textSize = 10.5f * density
-        val subText = when {
-            player.id == PlayerId.PLAYER_1 -> "PLAYER 1  •  RED (X)"
-            isBot -> {
-                val diffStr = when (botDifficulty) {
-                    0 -> "EASY"
-                    2 -> "HARD"
-                    else -> "MEDIUM"
-                }
-                "AI BOT  •  $diffStr (O)"
-            }
-            else -> "PLAYER 2  •  CYAN (O)"
-        }
-        paint.color = Color.parseColor("#988FB8")
-        val subBaseline = cardTop + cardH * 0.76f
-        canvas.drawText(subText, textStartX, subBaseline, paint)
-
-        // 6. Right Turn Indicator Pill
-        val pillW = 104f * density
-        val pillH = 32f * density
+        // 5. Turn Indicator Pill on Right
+        val pillW = 108f * density
+        val pillH = 34f * density
         val pillR = cardLeft + cardW - 12f * density
         val pillL = pillR - pillW
         val pillT = cardTop + (cardH - pillH) / 2f
@@ -700,12 +668,12 @@ class TicTacToeEngine(
         if (isTurn) {
             paint.style = Paint.Style.FILL
             paint.color = (playerColor and 0x00FFFFFF) or 0x33000000
-            canvas.drawRoundRect(pillRect, 16f * density, 16f * density, paint)
+            canvas.drawRoundRect(pillRect, 17f * density, 17f * density, paint)
 
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 1.6f * density
             paint.color = playerColor
-            canvas.drawRoundRect(pillRect, 16f * density, 16f * density, paint)
+            canvas.drawRoundRect(pillRect, 17f * density, 17f * density, paint)
 
             paint.style = Paint.Style.FILL
             paint.textAlign = Paint.Align.CENTER
@@ -720,17 +688,17 @@ class TicTacToeEngine(
             paint.isFakeBoldText = false
         } else {
             paint.style = Paint.Style.FILL
-            paint.color = Color.parseColor("#1A152E")
-            canvas.drawRoundRect(pillRect, 16f * density, 16f * density, paint)
+            paint.color = Color.parseColor("#1B1530")
+            canvas.drawRoundRect(pillRect, 17f * density, 17f * density, paint)
 
             paint.style = Paint.Style.STROKE
             paint.strokeWidth = 1f * density
-            paint.color = Color.parseColor("#2C2448")
-            canvas.drawRoundRect(pillRect, 16f * density, 16f * density, paint)
+            paint.color = Color.parseColor("#2E2450")
+            canvas.drawRoundRect(pillRect, 17f * density, 17f * density, paint)
 
             paint.style = Paint.Style.FILL
             paint.textAlign = Paint.Align.CENTER
-            paint.color = Color.parseColor("#766D94")
+            paint.color = Color.parseColor("#7E739E")
             paint.textSize = 11f * density
             paint.isFakeBoldText = false
 
@@ -738,6 +706,47 @@ class TicTacToeEngine(
             val baseline = pillRect.centerY() - (fm.ascent + fm.descent) / 2f
             canvas.drawText("WAITING", pillRect.centerX(), baseline, paint)
         }
+
+        // 6. Player Name & Role Label (Middle section with bounded width)
+        paint.textAlign = Paint.Align.LEFT
+        val textStartX = avatarL + avatarSize + 12f * density
+        val maxTextWidth = pillL - textStartX - 8f * density
+
+        // Top Category Tag (e.g. "PLAYER 1 (X)" or "AI BOT (O)")
+        paint.color = playerColor
+        paint.textSize = 11f * density
+        paint.isFakeBoldText = true
+        paint.letterSpacing = 0.05f
+        val tagText = when {
+            player.id == PlayerId.PLAYER_1 -> "PLAYER 1  •  ✕"
+            isBot -> {
+                val diffStr = when (botDifficulty) {
+                    0 -> "EASY"
+                    2 -> "HARD"
+                    else -> "MEDIUM"
+                }
+                "AI BOT ($diffStr)  •  ◯"
+            }
+            else -> "PLAYER 2  •  ◯"
+        }
+        val tagBaseline = cardTop + 28f * density
+        canvas.drawText(tagText, textStartX, tagBaseline, paint)
+        paint.letterSpacing = 0f
+
+        // Bottom Player Name (e.g. "Monika", "Player 2", "Robi the Bot")
+        paint.color = Color.WHITE
+        paint.textSize = 16.5f * density
+        paint.isFakeBoldText = true
+        var nameText = if (isBot) "Robi the Bot" else getPlayerDisplayName(player)
+        if (paint.measureText(nameText) > maxTextWidth) {
+            while (nameText.length > 3 && paint.measureText(nameText + "…") > maxTextWidth) {
+                nameText = nameText.substring(0, nameText.length - 1)
+            }
+            nameText += "…"
+        }
+        val nameBaseline = cardTop + 54f * density
+        canvas.drawText(nameText, textStartX, nameBaseline, paint)
+        paint.isFakeBoldText = false
 
         canvas.restore()
     }
