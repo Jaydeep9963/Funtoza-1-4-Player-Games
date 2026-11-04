@@ -7,10 +7,10 @@ enum class GameType(
     val primaryColorHex: String,
     val maxPlayers: Int = 4
 ) {
-    TANK_BATTLE(
-        "Tank Battle",
-        "Ricochet shells, maneuver tanks, blow up opponents!",
-        "🚀",
+    LUDO(
+        "Ludo",
+        "Classic Ludo arena! Roll dice, race tokens home, and knock opponents out!",
+        "🎲",
         "#FF3B30",
         4
     ),
@@ -26,7 +26,7 @@ enum class GameType(
         "Tron-style light trails! Trap opponents and don't hit walls!",
         "🐍",
         "#34C759",
-        4
+        1
     ),
     SNAKES_AND_LADDERS(
         "Snakes & Ladders",

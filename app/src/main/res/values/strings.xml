@@ -10,14 +10,14 @@
     <string name="mode_tournament">CUP TOURNAMENT</string>
     
     <!-- Games -->
-    <string name="game_tank">Tank Battle</string>
-    <string name="game_tank_desc">Bounce bullets, destroy crates, survive!</string>
+    <string name="game_ludo">Ludo</string>
+    <string name="game_ludo_desc">Roll dice, race tokens home, and knock opponents out!</string>
     <string name="game_soccer">Finger Soccer</string>
     <string name="game_soccer_desc">Air hockey mayhem with explosive goals!</string>
     <string name="game_snake">Neon Snake</string>
     <string name="game_snake_desc">Light-trail Tron battle. Don\'t crash!</string>
-    <string name="game_sumo">Sumo Bumper</string>
-    <string name="game_sumo_desc">Bump rivals off the electric arena!</string>
+    <string name="game_snakes_ladders">Snakes &amp; Ladders</string>
+    <string name="game_snakes_ladders_desc">Classic board race! Climb ladders and dodge snakes!</string>
     <string name="game_knife">Target Blitz</string>
     <string name="game_knife_desc">Throw knives at the spinning wheel!</string>
     
@@ -32,4 +32,3 @@
     <string name="next_game">Next Game</string>
     <string name="score">Score</string>
 </resources>
-

@@ -143,9 +143,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Minigame 1: Tank Battle -->
+            <!-- Minigame 1: Ludo -->
             <LinearLayout
-                android:id="@+id/cardSelectTank"
+                android:id="@+id/cardSelectLudo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_glass_card_selector"
@@ -160,7 +160,7 @@
                     android:layout_width="52dp"
                     android:layout_height="52dp"
                     android:background="@drawable/bg_glass_pill"
-                    android:text="🚀"
+                    android:text="🎲"
                     android:textSize="28sp"
                     android:gravity="center" />
 
@@ -175,7 +175,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TANK BATTLE"
+                        android:text="LUDO"
                         android:textColor="@color/white"
                         android:textSize="17sp"
                         android:textStyle="bold" />
@@ -183,7 +183,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ricochet shells, maneuver tanks, blow up opponents!"
+                        android:text="Classic Ludo arena! Roll dice, race tokens home, and knock opponents out!"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp"
                         android:layout_marginTop="2dp" />
@@ -310,9 +310,9 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Minigame 4: Sumo Bumper -->
+            <!-- Minigame 4: Snakes & Ladders -->
             <LinearLayout
-                android:id="@+id/cardSelectSumo"
+                android:id="@+id/cardSelectSnakesAndLadders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_glass_card_selector"

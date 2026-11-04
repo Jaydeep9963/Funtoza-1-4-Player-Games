@@ -35,41 +35,41 @@ class SnakesAndLaddersEngine(
     private var boardTop = 0f
     private var cellSize = 0f
 
-    // 10 Non-overlapping Ladders with clean spacing and distinct angles
+    // 10 Non-overlapping Ladders perfectly matching the reference image layout
     private val ladders = listOf(
-        BoardLadder(2, 19),   // Bottom left ladder
-        BoardLadder(8, 29),   // Bottom right ladder
-        BoardLadder(12, 33),  // Right ladder
-        BoardLadder(26, 45),  // Lower center diagonal ladder (clean, doesn't cross)
-        BoardLadder(39, 58),  // Mid left ladder
-        BoardLadder(47, 67),  // Mid right diagonal ladder
-        BoardLadder(53, 72),  // Upper right ladder
-        BoardLadder(65, 84),  // Center upper ladder
-        BoardLadder(82, 98),  // Upper left ladder
-        BoardLadder(89, 94)   // Upper right ladder
+        BoardLadder(3, 19),   // Bottom left ladder
+        BoardLadder(8, 28),   // Bottom right ladder
+        BoardLadder(21, 39),  // Mid-lower left diagonal ladder
+        BoardLadder(26, 47),  // Center diagonal ladder (clean, goes up-right from 26 to 47)
+        BoardLadder(31, 50),  // Mid-right vertical ladder
+        BoardLadder(37, 44),  // Center-left short ladder (37 to 44)
+        BoardLadder(53, 74),  // Upper right diagonal ladder (53 to 74)
+        BoardLadder(65, 85),  // Upper center vertical ladder (column 5)
+        BoardLadder(82, 98),  // Upper left diagonal ladder (82 to 98)
+        BoardLadder(89, 92)   // Upper right short ladder (89 to 92)
     )
 
-    // 10 Non-overlapping Snakes with natural spacing and breathing room
+    // 10 Non-overlapping Expressive Cartoon Snakes matching the reference image
     private val snakes = listOf(
-        // 1. Giant Coral Red Snake (97 -> 44) - Sinuous double-wave down its own channel
-        BoardSnake(97, 44, Color.parseColor("#FF3B5C"), Color.parseColor("#FFA3B2"), 1.25f),
-        // 2. Electric Azure Snake Top Right (91 -> 71)
-        BoardSnake(91, 71, Color.parseColor("#00B0FF"), Color.parseColor("#A6E4FF"), 0.9f),
-        // 3. Bright Emerald Green Snake (87 -> 55)
-        BoardSnake(87, 55, Color.parseColor("#00E676"), Color.parseColor("#A3FFD1"), 1.0f),
-        // 4. Golden Yellow Snake (88 -> 74)
-        BoardSnake(88, 74, Color.parseColor("#FFD600"), Color.parseColor("#FFF4A8"), 0.85f),
-        // 5. Vivid Teal Snake Center (56 -> 25)
-        BoardSnake(56, 25, Color.parseColor("#1DE9B6"), Color.parseColor("#B4FDF1"), 1.0f),
-        // 6. Amber Orange Snake Mid Left (60 -> 40)
-        BoardSnake(60, 40, Color.parseColor("#FF9100"), Color.parseColor("#FFD9A8"), 0.85f),
-        // 7. Coral Pink Snake Upper Mid (78 -> 62)
-        BoardSnake(78, 62, Color.parseColor("#FF6D92"), Color.parseColor("#FFC2D4"), 0.85f),
-        // 8. Sunset Orange Snake Mid Right (49 -> 28)
-        BoardSnake(49, 28, Color.parseColor("#FF6D00"), Color.parseColor("#FFC89E"), 0.9f),
-        // 9. Cyan Snake Bottom Left (23 -> 4)
-        BoardSnake(23, 4, Color.parseColor("#00E5FF"), Color.parseColor("#B0F5FF"), 0.9f),
-        // 10. Neon Purple Snake Bottom Center (15 -> 5)
+        // 1. Cute Cyan Snake Top-Left (99 -> 81)
+        BoardSnake(99, 81, Color.parseColor("#00E5FF"), Color.parseColor("#B0F5FF"), 0.85f),
+        // 2. Coral Red Snake Upper-Mid (97 -> 57) - Sinuous wave down column 4
+        BoardSnake(97, 57, Color.parseColor("#FF3B5C"), Color.parseColor("#FFA3B2"), 1.0f),
+        // 3. Bright Emerald Green Snake (95 -> 75) - Column 6
+        BoardSnake(95, 75, Color.parseColor("#00E676"), Color.parseColor("#A3FFD1"), 0.85f),
+        // 4. Golden Yellow Snake (93 -> 73) - Column 8
+        BoardSnake(93, 73, Color.parseColor("#FFD600"), Color.parseColor("#FFF4A8"), 0.85f),
+        // 5. Electric Azure Snake Far-Right (72 -> 51)
+        BoardSnake(72, 51, Color.parseColor("#00B0FF"), Color.parseColor("#A6E4FF"), 0.85f),
+        // 6. Amber Orange Snake Mid-Left (60 -> 41)
+        BoardSnake(60, 41, Color.parseColor("#FF9100"), Color.parseColor("#FFD9A8"), 0.85f),
+        // 7. Vivid Teal Snake Center (56 -> 36) - Column 5 (between ladders 37->44 and 26->47)
+        BoardSnake(56, 36, Color.parseColor("#1DE9B6"), Color.parseColor("#B4FDF1"), 0.85f),
+        // 8. Sunset Orange Snake Mid-Right (49 -> 29)
+        BoardSnake(49, 29, Color.parseColor("#FF6D00"), Color.parseColor("#FFC89E"), 0.85f),
+        // 9. Cyan Blue Snake Lower-Left (23 -> 4)
+        BoardSnake(23, 4, Color.parseColor("#00B0FF"), Color.parseColor("#B0F5FF"), 0.85f),
+        // 10. Neon Purple Snake Bottom (15 -> 5)
         BoardSnake(15, 5, Color.parseColor("#D500F9"), Color.parseColor("#F6B5FF"), 0.85f)
     )
 
@@ -166,12 +166,12 @@ class SnakesAndLaddersEngine(
         if (width <= 0f || height <= 0f) return
 
         // 1. Target Blitz HUD and Card spacing
-        val topHudMargin = 78f * density
-        val bottomMargin = 20f * density
-        cardH = if (totalPlayers <= 2) 50f * density else 44f * density
-        cardW = (width - 32f * density).coerceAtMost(480f * density)
+        val topHudMargin = 72f * density
+        val bottomMargin = 12f * density
+        cardH = if (totalPlayers <= 2) 48f * density else 42f * density
+        cardW = (width - 20f * density).coerceAtMost(500f * density)
 
-        topCardTop = topHudMargin + 4f * density
+        topCardTop = topHudMargin + 2f * density
         val topCardBottom = topCardTop + cardH
 
         val bottomCardBottom = height - bottomMargin
@@ -180,12 +180,12 @@ class SnakesAndLaddersEngine(
         // 2. Middle area available for board and top/bottom dice buttons
         val middleSpace = bottomCardTop - topCardBottom
         val diceH = 44f * density
-        val diceW = 154f * density
+        val diceW = 158f * density
 
         // Available vertical space for the board
-        val maxBoardH = middleSpace - (diceH * 2f + 14f * density)
-        val maxBoardW = width - 24f * density
-        boardSize = min(maxBoardW, maxBoardH).coerceIn(240f * density, 340f * density)
+        val maxBoardH = middleSpace - (diceH * 2f + 16f * density)
+        val maxBoardW = width - 10f * density
+        boardSize = min(maxBoardW, maxBoardH).coerceAtLeast(240f * density)
         cellSize = boardSize / 10f
 
         boardLeft = (width - boardSize) / 2f
@@ -673,10 +673,10 @@ class SnakesAndLaddersEngine(
 
             val nx = -dy / dist
             val ny = dx / dist
-            val railOffset = cellSize * 0.22f
+            val railOffset = cellSize * 0.18f
 
             // Rails extend slightly past the rungs
-            val ext = 6f * density
+            val ext = 5f * density
             val ux = dx / dist
             val uy = dy / dist
 
@@ -716,7 +716,7 @@ class SnakesAndLaddersEngine(
             canvas.drawLine(l1x, l1y, l2x, l2y, paint)
 
             // 4. Rungs
-            val numRungs = (dist / (cellSize * 0.40f)).toInt().coerceAtLeast(3)
+            val numRungs = (dist / (cellSize * 0.38f)).toInt().coerceIn(3, 8)
             for (i in 1..numRungs) {
                 val t = i.toFloat() / (numRungs + 1)
                 val rx = (p1.x + nx * railOffset) + (dx * t)
@@ -762,8 +762,8 @@ class SnakesAndLaddersEngine(
             // Smooth cartoon wavy S-curve with natural sinuous ripples
             val numSteps = 40
             val curvePoints = ArrayList<PointF>(numSteps + 1)
-            val numCycles = if (snake.head == 97) 2.0 else 1.0
-            val maxWave = cellSize * 0.44f * snake.waveAmpFactor
+            val numCycles = if (snake.head == 97) 1.5 else 1.0
+            val maxWave = cellSize * 0.28f * snake.waveAmpFactor
 
             for (i in 0..numSteps) {
                 val t = i.toFloat() / numSteps
@@ -834,7 +834,7 @@ class SnakesAndLaddersEngine(
             val headDy = if (curvePoints.size > 2) curvePoints[0].y - curvePoints[2].y else -dy
             val headAngle = atan2(headDy, headDx)
             val headDeg = Math.toDegrees(headAngle.toDouble()).toFloat()
-            val cartoonDeg = (headDeg % 360f).coerceIn(-40f, 40f)
+            val cartoonDeg = (headDeg % 360f).coerceIn(-25f, 25f)
 
             val headW = cellSize * 0.36f
             val headH = cellSize * 0.42f

@@ -69,7 +69,7 @@ class GameActivity : AppCompatActivity() {
     private var adAnimator: ValueAnimator? = null
 
     private lateinit var soundManager: SoundManager
-    private var gameType: GameType = GameType.TANK_BATTLE
+    private var gameType: GameType = GameType.LUDO
     private var playerCount: Int = 2
     private var botDifficulty: Int = 1
     private var isTournamentMode = false
@@ -82,11 +82,11 @@ class GameActivity : AppCompatActivity() {
 
         soundManager = SoundManager.getInstance(this)
 
-        val gameTypeName = intent.getStringExtra("GAME_TYPE") ?: GameType.TANK_BATTLE.name
+        val gameTypeName = intent.getStringExtra("GAME_TYPE") ?: GameType.LUDO.name
         gameType = try {
             GameType.valueOf(gameTypeName)
         } catch (_: Exception) {
-            GameType.TANK_BATTLE
+            GameType.LUDO
         }
         playerCount = intent.getIntExtra("PLAYER_COUNT", 2)
         botDifficulty = intent.getIntExtra("BOT_DIFFICULTY", 1)
@@ -325,7 +325,7 @@ class GameActivity : AppCompatActivity() {
 
     private fun startGame() {
         val engine: BaseGameEngine = when (gameType) {
-            GameType.TANK_BATTLE -> TankBattleEngine(this, playerCount, soundManager)
+            GameType.LUDO -> LudoEngine(this, playerCount, soundManager, botDifficulty)
             GameType.FINGER_SOCCER -> SoccerEngine(this, playerCount, soundManager)
             GameType.NEON_SNAKE -> {
                 if (playerCount == 1) {

@@ -39,12 +39,12 @@ class SelectGameActivity : AppCompatActivity() {
         val btnBack = findViewById<ImageButton>(R.id.btnSelectGameBack)
         val tvMatchup = findViewById<TextView>(R.id.tvSelectGameMatchup)
 
-        val cardTank = findViewById<LinearLayout>(R.id.cardSelectTank)
+        val cardLudo = findViewById<LinearLayout>(R.id.cardSelectLudo)
         val cardSoccer = findViewById<LinearLayout>(R.id.cardSelectSoccer)
         val cardSnake = findViewById<LinearLayout>(R.id.cardSelectSnake)
         val tvSelectSnakeTitle = findViewById<TextView>(R.id.tvSelectSnakeTitle)
         val tvSelectSnakeDesc = findViewById<TextView>(R.id.tvSelectSnakeDesc)
-        val cardSumo = findViewById<LinearLayout>(R.id.cardSelectSumo)
+        val cardSnakesAndLadders = findViewById<LinearLayout>(R.id.cardSelectSnakesAndLadders)
         val cardKnife = findViewById<LinearLayout>(R.id.cardSelectKnife)
         val cardTicTacToe = findViewById<LinearLayout>(R.id.cardSelectTicTacToe)
 
@@ -92,10 +92,10 @@ class SelectGameActivity : AppCompatActivity() {
             finish()
         }
 
-        cardTank.setOnClickListener { launchGame(GameType.TANK_BATTLE) }
+        cardLudo.setOnClickListener { launchGame(GameType.LUDO) }
         cardSoccer.setOnClickListener { launchGame(GameType.FINGER_SOCCER) }
         cardSnake.setOnClickListener { launchGame(GameType.NEON_SNAKE) }
-        cardSumo.setOnClickListener { launchGame(GameType.SNAKES_AND_LADDERS) }
+        cardSnakesAndLadders.setOnClickListener { launchGame(GameType.SNAKES_AND_LADDERS) }
         cardKnife.setOnClickListener { launchGame(GameType.TARGET_BLITZ) }
         cardTicTacToe.setOnClickListener { launchGame(GameType.TIC_TAC_TOE) }
 
