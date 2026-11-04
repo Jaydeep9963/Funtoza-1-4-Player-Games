@@ -776,4 +776,6 @@ class TicTacToeEngine(
         canvas.drawText("⚖️ DRAW MATCH!", bannerRect.centerX(), baseline, paint)
         paint.isFakeBoldText = false
     }
+
+    override fun shouldShowPlayerScoresOnWinnerDialog(): Boolean = false
 }

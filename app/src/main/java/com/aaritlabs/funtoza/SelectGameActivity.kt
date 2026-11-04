@@ -95,7 +95,7 @@ class SelectGameActivity : AppCompatActivity() {
         cardTank.setOnClickListener { launchGame(GameType.TANK_BATTLE) }
         cardSoccer.setOnClickListener { launchGame(GameType.FINGER_SOCCER) }
         cardSnake.setOnClickListener { launchGame(GameType.NEON_SNAKE) }
-        cardSumo.setOnClickListener { launchGame(GameType.SUMO_BUMPER) }
+        cardSumo.setOnClickListener { launchGame(GameType.SNAKES_AND_LADDERS) }
         cardKnife.setOnClickListener { launchGame(GameType.TARGET_BLITZ) }
         cardTicTacToe.setOnClickListener { launchGame(GameType.TIC_TAC_TOE) }
 

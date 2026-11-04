@@ -848,14 +848,22 @@ class SlitherSnakeEngine(
             paint.color = if (isBoostPressed) Color.parseColor("#FF2A6D") else Color.parseColor("#4B3A7A")
             canvas.drawCircle(boostBtnX, boostBtnY, boostBtnRadius, paint)
 
-            // Double Chevron Boost Icon (⏫)
+            // Double Chevron Boost Icon
             paint.style = Paint.Style.FILL
             paint.color = if (isBoostPressed) Color.WHITE else Color.parseColor("#8E82B4")
             paint.textSize = 24f * density
             paint.textAlign = Paint.Align.CENTER
             val fm = paint.fontMetrics
             val baseline = boostBtnY - (fm.ascent + fm.descent) / 2f
-            canvas.drawText("⏫", boostBtnX, baseline, paint)
+            canvas.drawText("\u23EB", boostBtnX, baseline, paint)
         }
+    }
+
+    override fun getPlayerScoreString(player: Player): String {
+        return "${player.score} Pts"
+    }
+
+    override fun getPlayerScoreValue(player: Player): Int {
+        return player.score
     }
 }

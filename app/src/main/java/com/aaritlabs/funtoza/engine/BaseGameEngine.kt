@@ -39,6 +39,17 @@ abstract class BaseGameEngine(
         }
     }
 
+    open fun getPlayerScoreString(player: Player): String {
+        val wins = player.score
+        return "$wins ${if (wins == 1) "Win" else "Wins"}"
+    }
+
+    open fun getPlayerScoreValue(player: Player): Int {
+        return player.score
+    }
+
+    open fun shouldShowPlayerScoresOnWinnerDialog(): Boolean = true
+
     var onRoundOverListener: ((winner: Player?) -> Unit)? = null
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
 

@@ -28,10 +28,10 @@ enum class GameType(
         "#34C759",
         4
     ),
-    SUMO_BUMPER(
-        "Sumo Bumper",
-        "High-energy bumper arena! Knock enemies off the floating ring!",
-        "💥",
+    SNAKES_AND_LADDERS(
+        "Snakes & Ladders",
+        "Classic board duel! Climb ladders, dodge snakes, and race to 100!",
+        "🪜",
         "#FFCC00",
         4
     ),

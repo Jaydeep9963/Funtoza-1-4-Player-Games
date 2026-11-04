@@ -327,7 +327,7 @@
                     android:layout_width="52dp"
                     android:layout_height="52dp"
                     android:background="@drawable/bg_glass_pill"
-                    android:text="💥"
+                    android:text="🪜"
                     android:textSize="28sp"
                     android:gravity="center" />
 
@@ -342,7 +342,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SUMO BUMPER"
+                        android:text="SNAKES &amp; LADDERS"
                         android:textColor="@color/white"
                         android:textSize="17sp"
                         android:textStyle="bold" />
@@ -350,7 +350,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bumper frenzy! Knock enemies off the floating ring!"
+                        android:text="Roll the dice, climb ladders, dodge snakes, and race to 100!"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp"
                         android:layout_marginTop="2dp" />

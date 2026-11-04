@@ -346,5 +346,14 @@ class SoccerEngine(
         // Particles
         particles.draw(canvas)
     }
+
+    override fun getPlayerScoreString(player: Player): String {
+        val goals = playerGoals[player.id] ?: 0
+        return "$goals ${if (goals == 1) "Goal" else "Goals"}"
+    }
+
+    override fun getPlayerScoreValue(player: Player): Int {
+        return playerGoals[player.id] ?: 0
+    }
 }
 

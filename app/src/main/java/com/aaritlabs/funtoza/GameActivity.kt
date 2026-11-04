@@ -6,13 +6,14 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.Gravity
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,6 +22,7 @@ import com.aaritlabs.funtoza.audio.SoundManager
 import com.aaritlabs.funtoza.engine.*
 import com.aaritlabs.funtoza.model.GameType
 import com.aaritlabs.funtoza.model.Player
+import com.aaritlabs.funtoza.model.PlayerId
 import com.aaritlabs.funtoza.view.CelebrationStarBlastView
 import com.aaritlabs.funtoza.view.GameSurfaceView
 
@@ -37,8 +39,11 @@ class GameActivity : AppCompatActivity() {
     private lateinit var winnerOverlay: View
     private lateinit var starBlastView: CelebrationStarBlastView
     private lateinit var tvWinnerName: TextView
+    private lateinit var layoutWinnerScores: LinearLayout
     private lateinit var btnNextRound: Button
     private lateinit var btnWinnerExit: Button
+
+    private val sessionWins = mutableMapOf<PlayerId, Int>()
 
     // Outside & inside sparkle stars for pause dialog
     private val pauseStarViews = mutableListOf<View>()
@@ -104,6 +109,7 @@ class GameActivity : AppCompatActivity() {
         winnerOverlay = findViewById(R.id.winnerOverlay)
         starBlastView = findViewById(R.id.starBlastView)
         tvWinnerName = findViewById(R.id.tvWinnerName)
+        layoutWinnerScores = findViewById(R.id.layoutWinnerScores)
         btnNextRound = findViewById(R.id.btnNextRound)
         btnWinnerExit = findViewById(R.id.btnWinnerExit)
 
@@ -334,13 +340,20 @@ class GameActivity : AppCompatActivity() {
                     SnakeEngine(this, playerCount, soundManager)
                 }
             }
-            GameType.SUMO_BUMPER -> SumoEngine(this, playerCount, soundManager)
-            GameType.TARGET_BLITZ -> KnifeHitEngine(this, playerCount, soundManager)
+            GameType.SNAKES_AND_LADDERS -> SnakesAndLaddersEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.TARGET_BLITZ -> KnifeHitEngine(this, playerCount, soundManager, botDifficulty)
             GameType.TIC_TAC_TOE -> TicTacToeEngine(this, playerCount, soundManager, botDifficulty)
         }
 
         engine.playerNames = playerNames
+        engine.players.forEach { p ->
+            p.score = sessionWins[p.id] ?: 0
+        }
         engine.onRoundOverListener = { winner ->
+            if (winner != null) {
+                sessionWins[winner.id] = (sessionWins[winner.id] ?: 0) + 1
+                winner.score = sessionWins[winner.id] ?: 1
+            }
             runOnUiThread {
                 showWinnerDialog(winner, engine)
             }
@@ -363,6 +376,14 @@ class GameActivity : AppCompatActivity() {
         val winnerColor = winner?.id?.color ?: Color.parseColor("#FFD54F")
         tvWinnerName.setTextColor(winnerColor)
 
+        // For Tic Tac Toe, only show who wins without the score count list
+        if (gameType == GameType.TIC_TAC_TOE || !engine.shouldShowPlayerScoresOnWinnerDialog()) {
+            layoutWinnerScores.visibility = View.GONE
+        } else {
+            layoutWinnerScores.visibility = View.VISIBLE
+            populateWinnerScores(engine, winner)
+        }
+
         if (isTournamentMode) {
             btnNextRound.text = "RETURN TO PODIUM"
             val returnIntent = Intent().apply {
@@ -376,6 +397,107 @@ class GameActivity : AppCompatActivity() {
         winnerOverlay.visibility = View.VISIBLE
         starBlastView.startBlast(winnerColor)
         startWinnerBoxSparklesAnimation()
+    }
+
+    private fun populateWinnerScores(engine: BaseGameEngine, winner: Player?) {
+        layoutWinnerScores.removeAllViews()
+
+        val sortedPlayers = engine.players.sortedWith(
+            compareByDescending<Player> { it == winner }
+                .thenByDescending { engine.getPlayerScoreValue(it) }
+        )
+
+        val density = resources.displayMetrics.density
+
+        for (player in sortedPlayers) {
+            val isPlayerWinner = (player == winner)
+
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    bottomMargin = (6 * density).toInt()
+                }
+                setPadding((10 * density).toInt(), (7 * density).toInt(), (10 * density).toInt(), (7 * density).toInt())
+
+                val bgDrawable = GradientDrawable().apply {
+                    cornerRadius = 14 * density
+                    if (isPlayerWinner) {
+                        setColor(Color.parseColor("#2A1948"))
+                        setStroke((1.5f * density).toInt(), Color.parseColor("#FFD54F"))
+                    } else {
+                        setColor(Color.parseColor("#1A1430"))
+                        setStroke((1.0f * density).toInt(), Color.parseColor("#322558"))
+                    }
+                }
+                background = bgDrawable
+            }
+
+            // 1. Avatar squircle
+            val avatarView = TextView(this).apply {
+                val size = (28 * density).toInt()
+                layoutParams = LinearLayout.LayoutParams(size, size)
+                gravity = Gravity.CENTER
+                textSize = 11f
+                typeface = Typeface.DEFAULT_BOLD
+                setTextColor(Color.WHITE)
+                text = if (player.isBot) "🤖" else "P${player.id.id}"
+
+                val avatarBg = when (player.id) {
+                    PlayerId.PLAYER_1 -> R.drawable.bg_avatar_squircle_p1
+                    PlayerId.PLAYER_2 -> R.drawable.bg_avatar_squircle_p2
+                    PlayerId.PLAYER_3 -> R.drawable.bg_avatar_squircle_p3
+                    PlayerId.PLAYER_4 -> R.drawable.bg_avatar_squircle_p4
+                }
+                setBackgroundResource(avatarBg)
+            }
+            row.addView(avatarView)
+
+            // 2. Player Name
+            val nameView = TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                    marginStart = (10 * density).toInt()
+                    marginEnd = (8 * density).toInt()
+                }
+                textSize = 13.5f
+                typeface = Typeface.DEFAULT_BOLD
+                setTextColor(if (isPlayerWinner) Color.WHITE else Color.parseColor("#CDC4EB"))
+                maxLines = 1
+                ellipsize = TextUtils.TruncateAt.END
+                text = if (player.isBot) "Robi the Bot" else engine.getPlayerDisplayName(player)
+            }
+            row.addView(nameView)
+
+            // 3. Score Pill
+            val scorePill = TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                setPadding((10 * density).toInt(), (4 * density).toInt(), (10 * density).toInt(), (4 * density).toInt())
+                textSize = 12f
+                typeface = Typeface.DEFAULT_BOLD
+                setTextColor(if (isPlayerWinner) Color.parseColor("#FFD54F") else Color.parseColor("#5CE1E6"))
+
+                val pillBg = GradientDrawable().apply {
+                    cornerRadius = 12 * density
+                    setColor(if (isPlayerWinner) Color.parseColor("#3B2660") else Color.parseColor("#22183D"))
+                    if (isPlayerWinner) {
+                        setStroke((1f * density).toInt(), Color.parseColor("#FFD54F"))
+                    }
+                }
+                background = pillBg
+
+                val scoreStr = engine.getPlayerScoreString(player)
+                text = if (isPlayerWinner) "$scoreStr 👑" else scoreStr
+            }
+            row.addView(scorePill)
+
+            layoutWinnerScores.addView(row)
+        }
     }
 
     private fun showSnakeGameOverDialog(score: Int, rank: Int, slitherEngine: SlitherSnakeEngine) {
