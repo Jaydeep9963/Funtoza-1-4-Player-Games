@@ -65,6 +65,11 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         hideSystemUI()
         updateSoundButtonState()
+        val bannerContainer = findViewById<FrameLayout>(R.id.bannerContainerMain)
+        if (bannerContainer != null) {
+            com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).loadBanner(this, bannerContainer)
+        }
+        com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).loadInterstitial()
     }
 
     private fun updateSoundButtonState() {

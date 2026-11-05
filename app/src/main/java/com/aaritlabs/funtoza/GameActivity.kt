@@ -82,6 +82,7 @@ class GameActivity : AppCompatActivity() {
         hideSystemUI()
 
         soundManager = SoundManager.getInstance(this)
+        com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).loadInterstitial()
 
         val gameTypeName = intent.getStringExtra("GAME_TYPE") ?: GameType.LUDO.name
         gameType = try {
@@ -208,14 +209,18 @@ class GameActivity : AppCompatActivity() {
             stopSnakeGameOverSparklesAnimation()
             adAnimator?.cancel()
             starBlastView.stopBlast()
-            finish()
+            com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).showInterstitial(this, force = true) {
+                finish()
+            }
         }
 
         btnWinnerExit.setOnClickListener {
             soundManager.play(SoundManager.SoundType.TAP)
             stopWinnerBoxSparklesAnimation()
             starBlastView.stopBlast()
-            finish()
+            com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).showInterstitial(this, force = true) {
+                finish()
+            }
         }
 
         btnNextRound.setOnClickListener {
@@ -648,7 +653,9 @@ class GameActivity : AppCompatActivity() {
             soundManager.play(SoundManager.SoundType.TAP)
             stopSnakeGameOverSparklesAnimation()
             adAnimator?.cancel()
-            finish()
+            com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).showInterstitial(this, force = true) {
+                finish()
+            }
         }
     }
 
@@ -727,6 +734,7 @@ class GameActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hideSystemUI()
+        com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).loadInterstitial()
         if (pauseOverlay.visibility != View.VISIBLE &&
             winnerOverlay.visibility != View.VISIBLE &&
             snakeGameOverOverlay.visibility != View.VISIBLE &&

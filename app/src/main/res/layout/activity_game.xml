@@ -16,7 +16,9 @@
         android:id="@+id/hudLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
         <ImageButton
             android:id="@+id/btnPause"
@@ -36,14 +38,14 @@
             android:layout_centerInParent="true"
             android:text="LUDO"
             android:textColor="@color/white"
-            android:textSize="17sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:letterSpacing="0.08"
             android:background="@drawable/bg_glass_pill"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp" />
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp" />
     </RelativeLayout>
 
     <!-- Pause Menu Frosted Glass Overlay -->

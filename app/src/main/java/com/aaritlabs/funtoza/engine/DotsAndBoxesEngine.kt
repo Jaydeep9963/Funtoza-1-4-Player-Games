@@ -167,7 +167,7 @@ class DotsAndBoxesEngine(
     private fun computeLayoutGeometry() {
         if (width <= 0f || height <= 0f) return
 
-        val hudTop = 114f * density // Clears the top title and turn banner
+        val hudTop = 126f * density // Clears the top title and turn banner with generous spacing
         val hudBottom = 86f * density
         val availableHeight = height - hudTop - hudBottom
         val availableWidth = width - 24f * density
@@ -762,10 +762,10 @@ class DotsAndBoxesEngine(
         val curP = getCurrentPlayer()
         val curColor = curP?.id?.color ?: Color.parseColor("#FFD54F")
 
-        // 1. Turn Banner / Status Pill (Cleanly placed below the top "DOTS & BOXES" title)
+        // 1. Turn Banner / Status Pill (Cleanly placed safely below the top "DOTS & BOXES" title)
         val bannerW = 230f * density
-        val bannerH = 30f * density
-        val bannerY = 74f * density
+        val bannerH = 28f * density
+        val bannerY = 88f * density
         val bannerR = RectF(width / 2f - bannerW / 2f, bannerY, width / 2f + bannerW / 2f, bannerY + bannerH)
 
         paint.style = Paint.Style.FILL

@@ -60,6 +60,94 @@ class SettingsActivity : AppCompatActivity() {
         val btnFeedback = findViewById<Button>(R.id.btnSettingsFeedback)
         val btnResetDefaults = findViewById<Button>(R.id.btnSettingsResetDefaults)
 
+        // 0. VIP Store & In-App Purchases Setup
+        val billingManager = com.aaritlabs.funtoza.monetization.BillingManager.getInstance(this)
+
+        val cardRemoveAds = findViewById<View>(R.id.cardRemoveAds)
+        val tvRemoveAdsTitle = findViewById<TextView>(R.id.tvRemoveAdsTitle)
+        val tvRemoveAdsDesc = findViewById<TextView>(R.id.tvRemoveAdsDesc)
+        val tvRemoveAdsPrice = findViewById<TextView>(R.id.tvRemoveAdsPrice)
+
+        val cardVipBundle = findViewById<View>(R.id.cardVipBundle)
+        val tvVipBundleTitle = findViewById<TextView>(R.id.tvVipBundleTitle)
+        val tvVipBundlePrice = findViewById<TextView>(R.id.tvVipBundlePrice)
+
+        val cardTipCoffee = findViewById<View>(R.id.cardTipCoffee)
+        val tvTipPrice = findViewById<TextView>(R.id.tvTipPrice)
+        val btnRestorePurchases = findViewById<Button>(R.id.btnRestorePurchases)
+
+        val updateVipStoreUI = {
+            val isNoAds = com.aaritlabs.funtoza.monetization.BillingManager.isNoAdsActive(this)
+            val isVipParty = com.aaritlabs.funtoza.monetization.BillingManager.isVipPartyActive(this)
+
+            if (isNoAds) {
+                tvRemoveAdsTitle?.text = "✓ VIP ACTIVE"
+                tvRemoveAdsDesc?.text = "All Ads Permanently Removed"
+                tvRemoveAdsPrice?.text = "OWNED"
+                tvRemoveAdsPrice?.setTextColor(Color.parseColor("#00E676"))
+                cardRemoveAds?.isClickable = false
+            } else {
+                tvRemoveAdsPrice?.text = billingManager.getFormattedPrice(com.aaritlabs.funtoza.monetization.BillingManager.SKU_REMOVE_ADS, "$1.99")
+            }
+
+            if (isVipParty) {
+                tvVipBundleTitle?.text = "✓ VIP PARTY PACK ACTIVE"
+                tvVipBundlePrice?.text = "OWNED"
+                tvVipBundlePrice?.setTextColor(Color.parseColor("#00E676"))
+                cardVipBundle?.isClickable = false
+            } else {
+                tvVipBundlePrice?.text = billingManager.getFormattedPrice(com.aaritlabs.funtoza.monetization.BillingManager.SKU_VIP_PARTY_BUNDLE, "$3.99")
+            }
+
+            tvTipPrice?.text = billingManager.getFormattedPrice(com.aaritlabs.funtoza.monetization.BillingManager.SKU_TIP_COFFEE, "$0.99")
+        }
+        updateVipStoreUI()
+
+        cardRemoveAds?.setOnClickListener {
+            soundManager.playClick()
+            if (!com.aaritlabs.funtoza.monetization.BillingManager.isNoAdsActive(this)) {
+                billingManager.launchPurchaseFlow(this, com.aaritlabs.funtoza.monetization.BillingManager.SKU_REMOVE_ADS)
+            }
+        }
+
+        cardVipBundle?.setOnClickListener {
+            soundManager.playClick()
+            if (!com.aaritlabs.funtoza.monetization.BillingManager.isVipPartyActive(this)) {
+                billingManager.launchPurchaseFlow(this, com.aaritlabs.funtoza.monetization.BillingManager.SKU_VIP_PARTY_BUNDLE)
+            }
+        }
+
+        cardTipCoffee?.setOnClickListener {
+            soundManager.playClick()
+            billingManager.launchPurchaseFlow(this, com.aaritlabs.funtoza.monetization.BillingManager.SKU_TIP_COFFEE)
+        }
+
+        btnRestorePurchases?.setOnClickListener {
+            soundManager.playClick()
+            Toast.makeText(this, "Restoring purchases from Google Play...", Toast.LENGTH_SHORT).show()
+            billingManager.restorePurchases { count ->
+                runOnUiThread {
+                    updateVipStoreUI()
+                    if (count > 0) {
+                        Toast.makeText(this, "✓ Successfully restored $count purchases!", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this, "No previous purchases found for this Google account.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        billingManager.onPurchaseCompletedListener = { sku ->
+            runOnUiThread {
+                updateVipStoreUI()
+                if (sku == com.aaritlabs.funtoza.monetization.BillingManager.SKU_TIP_COFFEE) {
+                    Toast.makeText(this, "☕ Thank you so much for your support!", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "👑 Welcome to VIP! Ads permanently removed!", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         // 1. Audio & Haptics Setup
         switchSound.isChecked = soundManager.isSoundEnabled
         switchVibration.isChecked = prefs.getBoolean("vibration_enabled", true)

@@ -1,19 +1,30 @@
 package com.aaritlabs.funtoza
 
 import android.animation.ValueAnimator
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.aaritlabs.funtoza.audio.SoundManager
 import com.aaritlabs.funtoza.model.GameType
+import com.aaritlabs.funtoza.monetization.AdMobManager
+import com.aaritlabs.funtoza.monetization.BillingManager
 
 class SelectGameActivity : AppCompatActivity() {
 
@@ -114,16 +125,16 @@ class SelectGameActivity : AppCompatActivity() {
             finish()
         }
 
-        cardLudo.setOnClickListener { launchGame(GameType.LUDO) }
-        cardSoccer.setOnClickListener { launchGame(GameType.FINGER_SOCCER) }
-        cardSnake.setOnClickListener { launchGame(GameType.NEON_SNAKE) }
-        cardSnakesAndLadders.setOnClickListener { launchGame(GameType.SNAKES_AND_LADDERS) }
-        cardKnife.setOnClickListener { launchGame(GameType.TARGET_BLITZ) }
-        cardTicTacToe.setOnClickListener { launchGame(GameType.TIC_TAC_TOE) }
-        cardOops.setOnClickListener { launchGame(GameType.OOPS) }
-        cardSeaBattle.setOnClickListener { launchGame(GameType.SEA_BATTLE) }
-        cardDotsAndBoxes.setOnClickListener { launchGame(GameType.DOTS_AND_BOXES) }
-        cardMemory.setOnClickListener { launchGame(GameType.MEMORY) }
+        cardLudo.setOnClickListener { checkAndLaunchGame(GameType.LUDO) }
+        cardSoccer.setOnClickListener { checkAndLaunchGame(GameType.FINGER_SOCCER) }
+        cardSnake.setOnClickListener { checkAndLaunchGame(GameType.NEON_SNAKE) }
+        cardSnakesAndLadders.setOnClickListener { checkAndLaunchGame(GameType.SNAKES_AND_LADDERS) }
+        cardKnife.setOnClickListener { checkAndLaunchGame(GameType.TARGET_BLITZ) }
+        cardTicTacToe.setOnClickListener { checkAndLaunchGame(GameType.TIC_TAC_TOE) }
+        cardOops.setOnClickListener { checkAndLaunchGame(GameType.OOPS) }
+        cardSeaBattle.setOnClickListener { checkAndLaunchGame(GameType.SEA_BATTLE) }
+        cardDotsAndBoxes.setOnClickListener { checkAndLaunchGame(GameType.DOTS_AND_BOXES) }
+        cardMemory.setOnClickListener { checkAndLaunchGame(GameType.MEMORY) }
 
         startSparkleStarsAnimation()
     }
@@ -163,8 +174,143 @@ class SelectGameActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkAndLaunchGame(gameType: GameType) {
+        soundManager.playClick()
+        if (BillingManager.isGameUnlocked(this, gameType)) {
+            launchGame(gameType)
+        } else {
+            showUnlockPremiumGameDialog(gameType)
+        }
+    }
+
+    private fun showUnlockPremiumGameDialog(gameType: GameType) {
+        val dialog = Dialog(this)
+        val density = resources.displayMetrics.density
+
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding((22 * density).toInt(), (22 * density).toInt(), (22 * density).toInt(), (22 * density).toInt())
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 18f * density
+                setColor(Color.parseColor("#1C1536"))
+                setStroke((1.5f * density).toInt(), Color.parseColor("#FFD700"))
+            }
+        }
+
+        val tvIcon = TextView(this).apply {
+            text = gameType.iconEmoji
+            textSize = 36f
+            gravity = Gravity.CENTER
+        }
+        container.addView(tvIcon)
+
+        val tvTitle = TextView(this).apply {
+            text = "UNLOCK ${gameType.title.uppercase()} 🔓"
+            textSize = 16f
+            setTextColor(Color.WHITE)
+            paint.isFakeBoldText = true
+            gravity = Gravity.CENTER
+            setPadding(0, (10 * density).toInt(), 0, 0)
+        }
+        container.addView(tvTitle)
+
+        val tvDesc = TextView(this).apply {
+            text = "Watch 1 short video to unlock ${gameType.title} FREE for 24 hours!\nOr get the VIP Pass to unlock all games permanently with NO ads."
+            textSize = 12.5f
+            setTextColor(Color.parseColor("#9EADC8"))
+            gravity = Gravity.CENTER
+            setPadding(0, (8 * density).toInt(), 0, (20 * density).toInt())
+            setLineSpacing(2f * density, 1f)
+        }
+        container.addView(tvDesc)
+
+        // 1. Watch Video to Unlock (Free for 24H)
+        val btnWatchAd = Button(this).apply {
+            text = "🎬 WATCH VIDEO TO UNLOCK (FREE)"
+            textSize = 13.5f
+            setTextColor(Color.WHITE)
+            paint.isFakeBoldText = true
+            minHeight = 0
+            includeFontPadding = false
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (48 * density).toInt())
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 12f * density
+                setColor(Color.parseColor("#FF2A85"))
+            }
+            setOnClickListener {
+                soundManager.playClick()
+                dialog.dismiss()
+                AdMobManager.getInstance(this@SelectGameActivity).showRewarded(
+                    this@SelectGameActivity,
+                    onRewardEarned = {
+                        BillingManager.unlockGameFor24Hours(this@SelectGameActivity, gameType)
+                        Toast.makeText(this@SelectGameActivity, "🎉 ${gameType.title} unlocked for 24 hours!", Toast.LENGTH_LONG).show()
+                        launchGame(gameType)
+                    },
+                    onDismiss = {
+                        // Dismissed
+                    }
+                )
+            }
+        }
+        container.addView(btnWatchAd)
+
+        // 2. Get VIP Pass
+        val btnGetVip = Button(this).apply {
+            text = "👑 GET VIP PASS (ALL GAMES FOREVER)"
+            textSize = 12f
+            setTextColor(Color.parseColor("#FFD700"))
+            paint.isFakeBoldText = true
+            minHeight = 0
+            includeFontPadding = false
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (44 * density).toInt()).apply {
+                topMargin = (10 * density).toInt()
+            }
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 10f * density
+                setColor(Color.parseColor("#261D14"))
+                setStroke((1f * density).toInt(), Color.parseColor("#FFD700"))
+            }
+            setOnClickListener {
+                soundManager.playClick()
+                dialog.dismiss()
+                startActivity(Intent(this@SelectGameActivity, SettingsActivity::class.java))
+            }
+        }
+        container.addView(btnGetVip)
+
+        // 3. Cancel button
+        val btnCancel = Button(this).apply {
+            text = "MAYBE LATER"
+            textSize = 12f
+            setTextColor(Color.parseColor("#7A86A8"))
+            minHeight = 0
+            includeFontPadding = false
+            layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (38 * density).toInt()).apply {
+                topMargin = (8 * density).toInt()
+            }
+            background = ColorDrawable(Color.TRANSPARENT)
+            setOnClickListener {
+                soundManager.playClick()
+                dialog.dismiss()
+            }
+        }
+        container.addView(btnCancel)
+
+        dialog.setContentView(container)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout((resources.displayMetrics.widthPixels * 0.88).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
+        if (!isFinishing && !isDestroyed) {
+            try { dialog.show() } catch (_: Exception) {}
+        }
+    }
+
     private fun launchGame(gameType: GameType) {
-        soundManager.play(SoundManager.SoundType.TAP)
+        soundManager.playClick()
         val intent = Intent(this, GameActivity::class.java).apply {
             putExtra("GAME_TYPE", gameType.name)
             putExtra("PLAYER_COUNT", playerCount)
@@ -178,6 +324,11 @@ class SelectGameActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         hideSystemUI()
+        val bannerContainer = findViewById<FrameLayout>(R.id.bannerContainerSelectGame)
+        if (bannerContainer != null) {
+            AdMobManager.getInstance(this).loadBanner(this, bannerContainer)
+        }
+        AdMobManager.getInstance(this).loadInterstitial()
     }
 
     override fun onDestroy() {

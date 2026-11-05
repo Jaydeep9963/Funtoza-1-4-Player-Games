@@ -231,7 +231,7 @@ class MemoryEngine(
     private fun computeLayoutGeometry() {
         if (width <= 0f || height <= 0f) return
 
-        val hudTop = 114f * density // Generous breathing room below the top title and turn banner
+        val hudTop = 126f * density // Generous breathing room below the top title and turn banner
         val hudBottom = 86f * density
         val availableHeight = height - hudTop - hudBottom
         val availableWidth = width - 16f * density
@@ -798,10 +798,10 @@ class MemoryEngine(
         val curP = getCurrentPlayer()
         val curColor = curP?.id?.color ?: Color.parseColor("#FFD54F")
 
-        // 1. Turn Banner / Status Pill (Positioned gracefully below the top "MEMORY" pill)
+        // 1. Turn Banner / Status Pill (Positioned cleanly safely below the top "MEMORY" pill)
         val bannerW = 230f * density
-        val bannerH = 30f * density
-        val bannerY = 74f * density
+        val bannerH = 28f * density
+        val bannerY = 88f * density
         val bannerR = RectF(width / 2f - bannerW / 2f, bannerY, width / 2f + bannerW / 2f, bannerY + bannerH)
 
         paint.style = Paint.Style.FILL

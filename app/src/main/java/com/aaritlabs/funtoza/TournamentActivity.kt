@@ -98,7 +98,9 @@ class TournamentActivity : AppCompatActivity() {
         btnNextMatch.setOnClickListener {
             soundManager.play(SoundManager.SoundType.TAP)
             if (tourneyState.isGameOver()) {
-                finish()
+                com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).showInterstitial(this) {
+                    finish()
+                }
             } else {
                 launchNextTournamentGame()
             }
@@ -276,14 +278,36 @@ class TournamentActivity : AppCompatActivity() {
             barView.addView(tvRank)
             pillarLayout.addView(barView)
 
-            // Player Label Below Pillar
+            // Player Label Below Pillar (High-contrast cosmic badge pill)
+            val readableColor = when (playerId) {
+                PlayerId.PLAYER_1 -> Color.parseColor("#FF5B52")
+                PlayerId.PLAYER_2 -> Color.parseColor("#4DA3FF") // High contrast neon blue, crisp on dark backgrounds
+                PlayerId.PLAYER_3 -> Color.parseColor("#34E065")
+                PlayerId.PLAYER_4 -> Color.parseColor("#FFD54F")
+            }
+
             val tvPlayerLabel = TextView(this).apply {
                 text = playerNames.getOrNull(playerId.id - 1) ?: playerId.displayName
-                textSize = 12.5f
+                textSize = 12f
                 gravity = Gravity.CENTER
-                setTextColor(playerId.color)
+                setTextColor(readableColor)
                 paint.isFakeBoldText = true
-                setPadding(0, (6 * density).toInt(), 0, 0)
+                setPadding((10 * density).toInt(), (4 * density).toInt(), (10 * density).toInt(), (4 * density).toInt())
+                background = GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    cornerRadius = 12f * density
+                    setColor(Color.parseColor("#1C1736"))
+                    setStroke(
+                        (1f * density).toInt(),
+                        Color.argb(90, Color.red(readableColor), Color.green(readableColor), Color.blue(readableColor))
+                    )
+                }
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    topMargin = (6 * density).toInt()
+                }
             }
             pillarLayout.addView(tvPlayerLabel)
 
@@ -293,7 +317,9 @@ class TournamentActivity : AppCompatActivity() {
 
     private fun showLeaveConfirmationDialog() {
         if (tourneyState.isGameOver()) {
-            finish()
+            com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).showInterstitial(this) {
+                finish()
+            }
             return
         }
 
@@ -319,13 +345,17 @@ class TournamentActivity : AppCompatActivity() {
             )
             Toast.makeText(this, "Tournament progress saved! You can resume it anytime.", Toast.LENGTH_SHORT).show()
             try { dialog.dismiss() } catch (_: Exception) {}
-            finish()
+            com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).showInterstitial(this, force = true) {
+                finish()
+            }
         }
 
         btnDiscardAndExit?.setOnClickListener {
             soundManager.play(SoundManager.SoundType.TAP)
             try { dialog.dismiss() } catch (_: Exception) {}
-            finish()
+            com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).showInterstitial(this, force = true) {
+                finish()
+            }
         }
 
         btnCancelSave?.setOnClickListener {
