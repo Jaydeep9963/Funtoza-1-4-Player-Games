@@ -331,8 +331,16 @@ class KnifeHitEngine(
 
                     // When target reaches 15th arrow, the player with the highest arrow count wins!
                     if (embeddedKnives.size >= maxTargetArrows) {
-                        val winner = players.maxByOrNull { playerKnifeCounts[it.id] ?: 0 } ?: k.player
-                        endRound(winner)
+                        if (isTeamMode) {
+                            val t1Arrows = (playerKnifeCounts[PlayerId.PLAYER_1] ?: 0) + (playerKnifeCounts[PlayerId.PLAYER_2] ?: 0)
+                            val t2Arrows = (playerKnifeCounts[PlayerId.PLAYER_3] ?: 0) + (playerKnifeCounts[PlayerId.PLAYER_4] ?: 0)
+                            winningTeam = if (t1Arrows >= t2Arrows) 1 else 2
+                            val winner = if (winningTeam == 1) players[0] else players[2]
+                            endRound(winner)
+                        } else {
+                            val winner = players.maxByOrNull { playerKnifeCounts[it.id] ?: 0 } ?: k.player
+                            endRound(winner)
+                        }
                         break
                     } else {
                         turnTransitionTimer = 0.45f
@@ -948,5 +956,14 @@ class KnifeHitEngine(
 
     override fun getPlayerScoreValue(player: Player): Int {
         return playerKnifeCounts[player.id] ?: 0
+    }
+
+    override fun getTeamScoreString(team: Int): String {
+        val count = if (team == 1) {
+            (playerKnifeCounts[PlayerId.PLAYER_1] ?: 0) + (playerKnifeCounts[PlayerId.PLAYER_2] ?: 0)
+        } else {
+            (playerKnifeCounts[PlayerId.PLAYER_3] ?: 0) + (playerKnifeCounts[PlayerId.PLAYER_4] ?: 0)
+        }
+        return "$count ${if (count == 1) "Arrow" else "Arrows"}"
     }
 }

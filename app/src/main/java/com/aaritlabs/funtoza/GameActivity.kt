@@ -73,6 +73,7 @@ class GameActivity : AppCompatActivity() {
     private var playerCount: Int = 2
     private var botDifficulty: Int = 1
     private var isTournamentMode = false
+    private var isTeamMode = false
     private var playerNames: ArrayList<String> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,6 +92,7 @@ class GameActivity : AppCompatActivity() {
         playerCount = intent.getIntExtra("PLAYER_COUNT", 2)
         botDifficulty = intent.getIntExtra("BOT_DIFFICULTY", 1)
         isTournamentMode = intent.getBooleanExtra("IS_TOURNAMENT_MODE", false)
+        isTeamMode = intent.getBooleanExtra("IS_TEAM", false)
         playerNames = intent.getStringArrayListExtra("PLAYER_NAMES") ?: arrayListOf()
 
         initViews()
@@ -344,8 +346,12 @@ class GameActivity : AppCompatActivity() {
             GameType.TARGET_BLITZ -> KnifeHitEngine(this, playerCount, soundManager, botDifficulty)
             GameType.TIC_TAC_TOE -> TicTacToeEngine(this, playerCount, soundManager, botDifficulty)
             GameType.OOPS -> OopsEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.SEA_BATTLE -> SeaBattleEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.DOTS_AND_BOXES -> DotsAndBoxesEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.MEMORY -> MemoryEngine(this, playerCount, soundManager, botDifficulty)
         }
 
+        engine.isTeamMode = isTeamMode
         engine.playerNames = playerNames
         engine.players.forEach { p ->
             p.score = sessionWins[p.id] ?: 0
@@ -367,14 +373,30 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun showWinnerDialog(winner: Player?, engine: BaseGameEngine) {
-        val winnerText = if (winner != null) {
+        val winnerText = if (engine.isTeamMode) {
+            val team = engine.winningTeam ?: if (winner?.id == PlayerId.PLAYER_1 || winner?.id == PlayerId.PLAYER_2) 1 else 2
+            val p1 = engine.getPlayerDisplayName(engine.players.getOrElse(0) { Player(PlayerId.PLAYER_1) })
+            val p2 = engine.getPlayerDisplayName(engine.players.getOrElse(1) { Player(PlayerId.PLAYER_2) })
+            val p3 = engine.getPlayerDisplayName(engine.players.getOrElse(2) { Player(PlayerId.PLAYER_3) })
+            val p4 = engine.getPlayerDisplayName(engine.players.getOrElse(3) { Player(PlayerId.PLAYER_4) })
+            if (team == 1) {
+                "👑 TEAM 1 WINS!\n($p1 & $p2)"
+            } else {
+                "👑 TEAM 2 WINS!\n($p3 & $p4)"
+            }
+        } else if (winner != null) {
             "👑 ${engine.getPlayerDisplayName(winner).uppercase()} WINS!"
         } else {
             "DRAW MATCH!"
         }
 
         tvWinnerName.text = winnerText
-        val winnerColor = winner?.id?.color ?: Color.parseColor("#FFD54F")
+        val winnerColor = if (engine.isTeamMode) {
+            val team = engine.winningTeam ?: if (winner?.id == PlayerId.PLAYER_1 || winner?.id == PlayerId.PLAYER_2) 1 else 2
+            if (team == 1) Color.parseColor("#FF3B30") else Color.parseColor("#007AFF")
+        } else {
+            winner?.id?.color ?: Color.parseColor("#FFD54F")
+        }
         tvWinnerName.setTextColor(winnerColor)
 
         // For Tic Tac Toe, only show who wins without the score count list
@@ -402,13 +424,111 @@ class GameActivity : AppCompatActivity() {
 
     private fun populateWinnerScores(engine: BaseGameEngine, winner: Player?) {
         layoutWinnerScores.removeAllViews()
+        val density = resources.displayMetrics.density
+
+        if (engine.isTeamMode) {
+            val winTeam = engine.winningTeam ?: if (winner?.id == PlayerId.PLAYER_1 || winner?.id == PlayerId.PLAYER_2) 1 else 2
+            val p1 = engine.getPlayerDisplayName(engine.players.getOrElse(0) { Player(PlayerId.PLAYER_1) })
+            val p2 = engine.getPlayerDisplayName(engine.players.getOrElse(1) { Player(PlayerId.PLAYER_2) })
+            val p3 = engine.getPlayerDisplayName(engine.players.getOrElse(2) { Player(PlayerId.PLAYER_3) })
+            val p4 = engine.getPlayerDisplayName(engine.players.getOrElse(3) { Player(PlayerId.PLAYER_4) })
+
+            val teams = listOf(
+                Triple(1, "TEAM 1: $p1 & $p2", Color.parseColor("#FF3B30")),
+                Triple(2, "TEAM 2: $p3 & $p4", Color.parseColor("#007AFF"))
+            ).sortedByDescending { it.first == winTeam }
+
+            for (t in teams) {
+                val isWinningTeam = (t.first == winTeam)
+                val row = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    gravity = Gravity.CENTER_VERTICAL
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        bottomMargin = (6 * density).toInt()
+                    }
+                    setPadding((10 * density).toInt(), (7 * density).toInt(), (10 * density).toInt(), (7 * density).toInt())
+
+                    val bgDrawable = GradientDrawable().apply {
+                        cornerRadius = 14 * density
+                        if (isWinningTeam) {
+                            setColor(Color.parseColor("#2A1948"))
+                            setStroke((1.5f * density).toInt(), Color.parseColor("#FFD54F"))
+                        } else {
+                            setColor(Color.parseColor("#1A1430"))
+                            setStroke((1.0f * density).toInt(), Color.parseColor("#322558"))
+                        }
+                    }
+                    background = bgDrawable
+                }
+
+                // Avatar
+                val avatarView = TextView(this).apply {
+                    val size = (28 * density).toInt()
+                    layoutParams = LinearLayout.LayoutParams(size, size)
+                    gravity = Gravity.CENTER
+                    textSize = 12f
+                    typeface = Typeface.DEFAULT_BOLD
+                    setTextColor(Color.WHITE)
+                    text = if (t.first == 1) "🔴" else "🔵"
+                    background = GradientDrawable().apply {
+                        shape = GradientDrawable.OVAL
+                        setColor(t.third)
+                    }
+                }
+                row.addView(avatarView)
+
+                // Team Name
+                val nameView = TextView(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        marginStart = (10 * density).toInt()
+                        marginEnd = (8 * density).toInt()
+                    }
+                    textSize = 13.5f
+                    typeface = Typeface.DEFAULT_BOLD
+                    setTextColor(if (isWinningTeam) Color.WHITE else Color.parseColor("#CDC4EB"))
+                    maxLines = 1
+                    ellipsize = TextUtils.TruncateAt.END
+                    text = t.second
+                }
+                row.addView(nameView)
+
+                // Score / Status Pill
+                val scorePill = TextView(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    textSize = 11.5f
+                    typeface = Typeface.DEFAULT_BOLD
+                    setPadding((8 * density).toInt(), (3 * density).toInt(), (8 * density).toInt(), (3 * density).toInt())
+                    val pillBg = GradientDrawable().apply {
+                        cornerRadius = 8 * density
+                        if (isWinningTeam) {
+                            setColor(Color.parseColor("#38235C"))
+                            setStroke((1.0f * density).toInt(), Color.parseColor("#FFD54F"))
+                        } else {
+                            setColor(Color.parseColor("#1C1534"))
+                            setStroke((0.8f * density).toInt(), Color.parseColor("#3A2A60"))
+                        }
+                    }
+                    background = pillBg
+                    setTextColor(if (isWinningTeam) Color.parseColor("#FFD54F") else Color.parseColor("#9C8EB9"))
+                    text = engine.getTeamScoreString(t.first)
+                }
+                row.addView(scorePill)
+
+                layoutWinnerScores.addView(row)
+            }
+            return
+        }
 
         val sortedPlayers = engine.players.sortedWith(
             compareByDescending<Player> { it == winner }
                 .thenByDescending { engine.getPlayerScoreValue(it) }
         )
-
-        val density = resources.displayMetrics.density
 
         for (player in sortedPlayers) {
             val isPlayerWinner = (player == winner)

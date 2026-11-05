@@ -6,14 +6,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/bg_cosmic_neon"
-    android:padding="20dp"
+    android:paddingStart="18dp"
+    android:paddingEnd="18dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="12dp"
     tools:context=".SettingsActivity">
 
     <!-- Top Navigation Header -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="16dp">
 
         <ImageButton
             android:id="@+id/btnSettingsBack"
@@ -23,44 +26,56 @@
             android:layout_centerVertical="true"
             android:background="@drawable/bg_glass_icon_btn"
             android:src="@drawable/ic_back"
-            android:tint="@color/white"
+            app:tint="@color/white"
             android:contentDescription="Back" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="SETTINGS"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.12"
-            android:shadowColor="@color/accent_cyan"
-            android:shadowDx="0"
-            android:shadowDy="2"
-            android:shadowRadius="10" />
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SETTINGS"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.10" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preferences &amp; Customization"
+                android:textColor="#8B95B0"
+                android:textSize="11.5sp" />
+        </LinearLayout>
     </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:fadeScrollbars="false"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
 
-            <!-- Section 1: Audio & Haptics -->
+            <!-- SECTION 1: AUDIO & HAPTICS -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="AUDIO &amp; HAPTICS"
                 android:textColor="@color/accent_cyan"
-                android:textSize="12sp"
+                android:textSize="11.5sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.12"
+                android:letterSpacing="0.10"
                 android:layout_marginBottom="8dp" />
 
             <LinearLayout
@@ -69,7 +84,7 @@
                 android:orientation="vertical"
                 android:background="@drawable/bg_glass_card"
                 android:padding="16dp"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="18dp">
 
                 <!-- Sound Effects Switch -->
                 <RelativeLayout
@@ -77,53 +92,93 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="14dp">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🔊 Sound Effects (SFX)"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔊 Sound Effects (SFX)"
+                            android:textColor="@color/white"
+                            android:textSize="14.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Crisp audio clicks and match sounds"
+                            android:textColor="#8B95B0"
+                            android:textSize="11sp" />
+                    </LinearLayout>
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switchSound"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:checked="true" />
                 </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#1E193C"
+                    android:layout_marginBottom="14dp" />
 
                 <!-- Vibration / Haptics Switch -->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📳 Haptic Vibration"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📳 Haptic Vibration"
+                            android:textColor="@color/white"
+                            android:textSize="14.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Tactile vibrations on moves and goals"
+                            android:textColor="#8B95B0"
+                            android:textSize="11sp" />
+                    </LinearLayout>
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switchVibration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:checked="true" />
                 </RelativeLayout>
             </LinearLayout>
 
-            <!-- Section 2: Branding & Game Info -->
+            <!-- SECTION 2: GAMEPLAY PREFERENCES -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ABOUT FUNTOZA"
+                android:text="DEFAULT GAMEPLAY SETTINGS"
                 android:textColor="@color/accent_cyan"
-                android:textSize="12sp"
+                android:textSize="11.5sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.12"
+                android:letterSpacing="0.10"
                 android:layout_marginBottom="8dp" />
 
             <LinearLayout
@@ -131,67 +186,330 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/bg_glass_card"
-                android:padding="20dp"
-                android:gravity="center"
-                android:layout_marginBottom="20dp">
+                android:padding="16dp"
+                android:layout_marginBottom="18dp">
 
-                <!-- 3D App Icon Thumbnail -->
-                <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:src="@mipmap/app_icon_round"
-                    android:contentDescription="App Icon" />
+                <!-- Bot Difficulty Header -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🤖 Default AI Bot Difficulty"
+                    android:textColor="@color/white"
+                    android:textSize="14.5sp"
+                    android:textStyle="bold" />
+
+                <!-- 3-Segment Difficulty Toggle Bar -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_glass_pill"
+                    android:orientation="horizontal"
+                    android:padding="3dp"
+                    android:layout_marginTop="10dp">
+
+                    <Button
+                        android:id="@+id/btnSettingsDiffEasy"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text="EASY 😌"
+                        android:textColor="#7A8B9E"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnSettingsDiffMedium"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_diff_active_pink"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text="MED 🤠"
+                        android:textColor="@color/white"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnSettingsDiffHard"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text="HARD 😈"
+                        android:textColor="#7A8B9E"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvSettingsDiffDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Medium: Balanced reaction &amp; clever tactics"
+                    android:textColor="#8B95B0"
+                    android:textSize="11sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#1E193C"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="14dp" />
+
+                <!-- Match Rounds Header -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚡ Default Match Format"
+                    android:textColor="@color/white"
+                    android:textSize="14.5sp"
+                    android:textStyle="bold" />
+
+                <!-- 3-Segment Format Toggle Bar -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_glass_pill"
+                    android:orientation="horizontal"
+                    android:padding="3dp"
+                    android:layout_marginTop="10dp">
+
+                    <Button
+                        android:id="@+id/btnSettingsRounds1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text="1 ROUND ⚡"
+                        android:textColor="#7A8B9E"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnSettingsRounds3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_diff_active_pink"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text="BEST OF 3 ⚡"
+                        android:textColor="@color/white"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnSettingsRounds5"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text="BEST OF 5 ⚡"
+                        android:textColor="#7A8B9E"
+                        android:textSize="11.5sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SECTION 3: CUP TOURNAMENTS & HISTORY -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CUP TOURNAMENT DATA"
+                android:textColor="@color/accent_cyan"
+                android:textSize="11.5sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.10"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_glass_card"
+                android:padding="16dp"
+                android:layout_marginBottom="18dp">
+
+                <!-- View History & Replays Button -->
+                <LinearLayout
+                    android:id="@+id/btnSettingsViewHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_glass_card_selector"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="📜 View Saved Cups &amp; Replays"
+                        android:textColor="@color/accent_gold"
+                        android:textSize="13.5sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="➔"
+                        android:textColor="@color/accent_gold"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Clear History Button -->
+                <LinearLayout
+                    android:id="@+id/btnSettingsClearHistory"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_glass_card_selector"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🗑️ Clear Saved Tournaments"
+                        android:textColor="@color/player_1_red"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Clear"
+                        android:textColor="#88FF4D6D"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SECTION 4: ACTIONS & ABOUT -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="APP &amp; SUPPORT"
+                android:textColor="@color/accent_cyan"
+                android:textSize="11.5sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.10"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_glass_card"
+                android:padding="16dp"
+                android:layout_marginBottom="18dp">
+
+                <!-- Share App -->
+                <Button
+                    android:id="@+id/btnSettingsShare"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/bg_glass_card_selector"
+                    android:minHeight="0dp"
+                    android:gravity="center"
+                    android:text="📤 SHARE WITH FRIENDS"
+                    android:textColor="@color/accent_cyan"
+                    android:textSize="13.5sp"
+                    android:textStyle="bold" />
+
+                <!-- Rate / Feedback Button -->
+                <Button
+                    android:id="@+id/btnSettingsFeedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/bg_glass_card_selector"
+                    android:minHeight="0dp"
+                    android:gravity="center"
+                    android:text="⭐ RATE &amp; FEEDBACK"
+                    android:textColor="#FFD54F"
+                    android:textSize="13.5sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp" />
+
+                <!-- Reset Settings Button -->
+                <Button
+                    android:id="@+id/btnSettingsResetDefaults"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/bg_glass_card_selector"
+                    android:minHeight="0dp"
+                    android:gravity="center"
+                    android:text="🔄 RESET ALL SETTINGS"
+                    android:textColor="#A0B0D0"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+
+            <!-- SECTION 5: BRANDING & 100% OFFLINE PRIVACY -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_glass_card"
+                android:padding="18dp"
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="FUNTOZA"
+                    android:text="🎮 FUNTOZA"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    android:letterSpacing="0.1"
+                    android:letterSpacing="0.08" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1, 2, 3 &amp; 4 Player Offline Party Games"
+                    android:textColor="#A0B0D0"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🛡️ 100% Offline • Zero Data Tracking • Completely Private"
+                    android:textColor="@color/accent_cyan"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
                     android:layout_marginTop="8dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Funtoza: 1–4 Player Games"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Play Together. Have More Fun! 🎮"
-                    android:textColor="@color/accent_gold"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Version 1.0.0 • Native Android Kotlin\nA World of Fun • Developed by AarIt Labs"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11sp"
-                    android:gravity="center"
-                    android:layout_marginTop="10dp" />
+                    android:text="Version 1.0.0 • Developed by AarIt Labs"
+                    android:textColor="#6A7694"
+                    android:textSize="10.5sp"
+                    android:layout_marginTop="6dp" />
             </LinearLayout>
-
-            <!-- Share App Button -->
-            <Button
-                android:id="@+id/btnSettingsShare"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_glass_card_selector"
-                android:text="📤 SHARE FUNTOZA"
-                android:textColor="@color/accent_cyan"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
 
         </LinearLayout>
     </ScrollView>
 
 </LinearLayout>
-

@@ -57,11 +57,20 @@ class SoccerEngine(
         players.forEachIndexed { index, p ->
             playerGoals[p.id] = 0
             val spawn = if (isPortrait) {
-                when (index) {
-                    0 -> Pair(centerX, height * 0.80f) // Bottom team / P1
-                    1 -> Pair(centerX, height * 0.20f) // Top team / P2
-                    2 -> Pair(width * 0.25f, centerY)   // Left team / P3
-                    else -> Pair(width * 0.75f, centerY) // Right team / P4
+                if (isTeamMode) {
+                    when (index) {
+                        0 -> Pair(width * 0.25f, height * 0.75f) // Team 1: P1
+                        1 -> Pair(width * 0.75f, height * 0.75f) // Team 1: P2
+                        2 -> Pair(width * 0.25f, height * 0.25f) // Team 2: P3
+                        else -> Pair(width * 0.75f, height * 0.25f) // Team 2: P4
+                    }
+                } else {
+                    when (index) {
+                        0 -> Pair(centerX, height * 0.80f) // Bottom team / P1
+                        1 -> Pair(centerX, height * 0.20f) // Top team / P2
+                        2 -> Pair(width * 0.25f, centerY)   // Left team / P3
+                        else -> Pair(width * 0.75f, centerY) // Right team / P4
+                    }
                 }
             } else {
                 when (index) {
@@ -91,6 +100,13 @@ class SoccerEngine(
                 // P1 bottom half, P2 top half
                 controlZones[PlayerId.PLAYER_1] = RectF(0f, height / 2f, width, height)
                 controlZones[PlayerId.PLAYER_2] = RectF(0f, 0f, width, height / 2f)
+            } else if (isTeamMode) {
+                // Team 1: P1 (bottom-left) & P2 (bottom-right)
+                controlZones[PlayerId.PLAYER_1] = RectF(0f, height / 2f, width / 2f, height)
+                controlZones[PlayerId.PLAYER_2] = RectF(width / 2f, height / 2f, width, height)
+                // Team 2: P3 (top-left) & P4 (top-right)
+                controlZones[PlayerId.PLAYER_3] = RectF(0f, 0f, width / 2f, height / 2f)
+                controlZones[PlayerId.PLAYER_4] = RectF(width / 2f, 0f, width, height / 2f)
             } else {
                 // 4 quadrants
                 controlZones[PlayerId.PLAYER_1] = RectF(0f, height / 2f, width / 2f, height)
@@ -258,10 +274,31 @@ class SoccerEngine(
         ball.vx = if (scorer == PlayerId.PLAYER_1) -220f else 220f
         ball.vy = (Math.random() * 200 - 100).toFloat()
 
-        if (count >= maxGoals) {
-            val winnerPlayer = players.firstOrNull { it.id == scorer }
-            endRound(winnerPlayer)
+        if (isTeamMode) {
+            val team1Goals = (playerGoals[PlayerId.PLAYER_1] ?: 0) + (playerGoals[PlayerId.PLAYER_2] ?: 0)
+            val team2Goals = (playerGoals[PlayerId.PLAYER_3] ?: 0) + (playerGoals[PlayerId.PLAYER_4] ?: 0)
+            if (team1Goals >= maxGoals) {
+                winningTeam = 1
+                endRound(players[0])
+            } else if (team2Goals >= maxGoals) {
+                winningTeam = 2
+                endRound(players[2])
+            }
+        } else {
+            if (count >= maxGoals) {
+                val winnerPlayer = players.firstOrNull { it.id == scorer }
+                endRound(winnerPlayer)
+            }
         }
+    }
+
+    override fun getTeamScoreString(team: Int): String {
+        val goals = if (team == 1) {
+            (playerGoals[PlayerId.PLAYER_1] ?: 0) + (playerGoals[PlayerId.PLAYER_2] ?: 0)
+        } else {
+            (playerGoals[PlayerId.PLAYER_3] ?: 0) + (playerGoals[PlayerId.PLAYER_4] ?: 0)
+        }
+        return "$goals / $maxGoals Goals"
     }
 
     override fun render(canvas: Canvas) {

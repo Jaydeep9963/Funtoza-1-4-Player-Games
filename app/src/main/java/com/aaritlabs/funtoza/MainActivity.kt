@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -23,6 +25,8 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.aaritlabs.funtoza.audio.SoundManager
+import com.aaritlabs.funtoza.model.SavedTournament
+import com.aaritlabs.funtoza.model.TournamentHistoryManager
 import com.aaritlabs.funtoza.model.TournamentState
 
 class MainActivity : AppCompatActivity() {
@@ -340,7 +344,7 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Shows a modal to select player count for Party Games (2, 3, or 4 players),
-     * followed by player name setup.
+     * followed by player name setup. Also surfaces active saved cup & cup history.
      */
     private fun showPartyGamesPlayerChoiceDialog() {
         val dialog = Dialog(this)
@@ -349,9 +353,39 @@ class MainActivity : AppCompatActivity() {
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
         val btnBack = dialog.findViewById<ImageButton>(R.id.btnPartySelectBack)
+        val layoutResumeCup = dialog.findViewById<View>(R.id.layoutResumeCup)
+        val tvResumeCupTitle = dialog.findViewById<TextView>(R.id.tvResumeCupTitle)
+        val tvResumeCupSubtitle = dialog.findViewById<TextView>(R.id.tvResumeCupSubtitle)
+        val btnViewCupHistory = dialog.findViewById<View>(R.id.btnViewCupHistory)
         val btn2P = dialog.findViewById<View>(R.id.btnParty2P)
         val btn3P = dialog.findViewById<View>(R.id.btnParty3P)
         val btn4P = dialog.findViewById<View>(R.id.btnParty4P)
+
+        // Check if there is an active in-progress saved cup
+        val activeCup = TournamentHistoryManager.getActiveSavedTournament(this)
+        if (activeCup != null) {
+            layoutResumeCup?.visibility = View.VISIBLE
+            tvResumeCupTitle?.text = "RESUME SAVED CUP ⚡"
+            tvResumeCupSubtitle?.text = "${activeCup.title} • Round ${activeCup.currentRound} of ${activeCup.totalRounds}"
+            layoutResumeCup?.setOnClickListener {
+                soundManager.play(SoundManager.SoundType.TAP)
+                dialog.dismiss()
+                val restoredState = TournamentHistoryManager.toTournamentState(activeCup)
+                val intent = Intent(this, TournamentActivity::class.java).apply {
+                    putExtra("TOURNAMENT_STATE", restoredState)
+                    putStringArrayListExtra("PLAYER_NAMES", ArrayList(activeCup.playerNames))
+                }
+                startActivity(intent)
+            }
+        } else {
+            layoutResumeCup?.visibility = View.GONE
+        }
+
+        btnViewCupHistory?.setOnClickListener {
+            soundManager.play(SoundManager.SoundType.TAP)
+            dialog.dismiss()
+            showTournamentHistoryDialog()
+        }
 
         btnBack?.setOnClickListener {
             dialog.dismiss()
@@ -381,6 +415,185 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun showTournamentHistoryDialog() {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_tournament_history)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        val btnBack = dialog.findViewById<ImageButton>(R.id.btnHistoryBack)
+        val tvEmpty = dialog.findViewById<TextView>(R.id.tvHistoryEmpty)
+        val layoutItems = dialog.findViewById<LinearLayout>(R.id.layoutHistoryItems)
+
+        btnBack?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        fun populateList() {
+            layoutItems?.removeAllViews()
+            val list = TournamentHistoryManager.getSavedTournaments(this)
+            if (list.isEmpty()) {
+                tvEmpty?.visibility = View.VISIBLE
+            } else {
+                tvEmpty?.visibility = View.GONE
+                val density = resources.displayMetrics.density
+
+                list.forEach { item ->
+                    val card = LinearLayout(this).apply {
+                        orientation = LinearLayout.VERTICAL
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            setMargins(0, 0, 0, (12 * density).toInt())
+                        }
+                        setPadding((14 * density).toInt(), (14 * density).toInt(), (14 * density).toInt(), (14 * density).toInt())
+                        background = GradientDrawable().apply {
+                            shape = GradientDrawable.RECTANGLE
+                            cornerRadius = 14f * density
+                            if (!item.isCompleted) {
+                                setColor(Color.parseColor("#261738"))
+                                setStroke((1.8f * density).toInt(), Color.parseColor("#FFD700"))
+                            } else {
+                                setColor(Color.parseColor("#15112B"))
+                                setStroke((1f * density).toInt(), Color.parseColor("#29224A"))
+                            }
+                        }
+                    }
+
+                    // Header row: Title & Date
+                    val headerRow = LinearLayout(this).apply {
+                        orientation = LinearLayout.HORIZONTAL
+                        gravity = Gravity.CENTER_VERTICAL
+                    }
+
+                    val tvTitle = TextView(this).apply {
+                        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f)
+                        text = item.title
+                        setTextColor(if (!item.isCompleted) Color.parseColor("#FFD700") else Color.WHITE)
+                        textSize = 14f
+                        paint.isFakeBoldText = true
+                    }
+                    headerRow.addView(tvTitle)
+
+                    val tvDate = TextView(this).apply {
+                        text = item.dateStr
+                        setTextColor(Color.parseColor("#7A86A8"))
+                        textSize = 11f
+                    }
+                    headerRow.addView(tvDate)
+                    card.addView(headerRow)
+
+                    // Subtitle: Players and summary
+                    val playersStr = item.playerNames.joinToString(", ")
+                    val tvDetails = TextView(this).apply {
+                        text = "👥 $playersStr (${item.totalPlayers}P)"
+                        setTextColor(Color.parseColor("#9EADC8"))
+                        textSize = 12f
+                        setPadding(0, (4 * density).toInt(), 0, (8 * density).toInt())
+                    }
+                    card.addView(tvDetails)
+
+                    // Buttons Row
+                    val btnRow = LinearLayout(this).apply {
+                        orientation = LinearLayout.HORIZONTAL
+                        gravity = Gravity.CENTER_VERTICAL
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            (38 * density).toInt()
+                        )
+                    }
+
+                    if (!item.isCompleted) {
+                        // Resume button
+                        val btnResume = Button(this).apply {
+                            text = "RESUME ➔"
+                            textSize = 11.5f
+                            setTextColor(Color.WHITE)
+                            paint.isFakeBoldText = true
+                            background = GradientDrawable().apply {
+                                shape = GradientDrawable.RECTANGLE
+                                cornerRadius = 8f * density
+                                setColor(Color.parseColor("#FF2A85"))
+                            }
+                            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.2f).apply {
+                                marginEnd = (6 * density).toInt()
+                            }
+                            setOnClickListener {
+                                soundManager.play(SoundManager.SoundType.TAP)
+                                dialog.dismiss()
+                                val restored = TournamentHistoryManager.toTournamentState(item)
+                                val intent = Intent(this@MainActivity, TournamentActivity::class.java).apply {
+                                    putExtra("TOURNAMENT_STATE", restored)
+                                    putStringArrayListExtra("PLAYER_NAMES", ArrayList(item.playerNames))
+                                }
+                                startActivity(intent)
+                            }
+                        }
+                        btnRow.addView(btnResume)
+                    }
+
+                    // Replay button (starts fresh cup tournament with same 5 games and players)
+                    val btnReplay = Button(this).apply {
+                        text = "REPLAY 🔄"
+                        textSize = 11.5f
+                        setTextColor(Color.WHITE)
+                        paint.isFakeBoldText = true
+                        background = GradientDrawable().apply {
+                            shape = GradientDrawable.RECTANGLE
+                            cornerRadius = 8f * density
+                            setColor(Color.parseColor("#0077B6"))
+                        }
+                        layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1.0f).apply {
+                            marginEnd = (6 * density).toInt()
+                        }
+                        setOnClickListener {
+                            soundManager.play(SoundManager.SoundType.TAP)
+                            dialog.dismiss()
+                            val freshReplay = TournamentHistoryManager.toReplayTournamentState(item)
+                            val intent = Intent(this@MainActivity, TournamentActivity::class.java).apply {
+                                putExtra("TOURNAMENT_STATE", freshReplay)
+                                putStringArrayListExtra("PLAYER_NAMES", ArrayList(item.playerNames))
+                            }
+                            startActivity(intent)
+                        }
+                    }
+                    btnRow.addView(btnReplay)
+
+                    // Delete button
+                    val btnDelete = Button(this).apply {
+                        text = "🗑️"
+                        textSize = 13f
+                        setTextColor(Color.parseColor("#FF4D6D"))
+                        background = GradientDrawable().apply {
+                            shape = GradientDrawable.RECTANGLE
+                            cornerRadius = 8f * density
+                            setColor(Color.parseColor("#281424"))
+                            setStroke((1f * density).toInt(), Color.parseColor("#5A1E32"))
+                        }
+                        val widthPx = (44 * density).toInt()
+                        layoutParams = LinearLayout.LayoutParams(widthPx, LinearLayout.LayoutParams.MATCH_PARENT)
+                        setOnClickListener {
+                            soundManager.play(SoundManager.SoundType.TAP)
+                            TournamentHistoryManager.deleteTournament(this@MainActivity, item.id)
+                            populateList()
+                        }
+                    }
+                    btnRow.addView(btnDelete)
+
+                    card.addView(btnRow)
+                    layoutItems.addView(card)
+                }
+            }
+        }
+
+        populateList()
+
+        if (!isFinishing && !isDestroyed) {
+            try { dialog.show() } catch (e: Exception) { e.printStackTrace() }
         }
     }
 
@@ -451,6 +664,7 @@ class MainActivity : AppCompatActivity() {
         val tvTitle = dialog.findViewById<TextView>(R.id.tvPlayerSetupTitle)
         val tvSubtitle = dialog.findViewById<TextView>(R.id.tvPlayerSetupSubtitle)
         val btnStart = dialog.findViewById<Button>(R.id.btnPlayerSetupContinue)
+        val btnRandomStart = dialog.findViewById<Button>(R.id.btnPlayerSetupRandom)
         val btnBack = dialog.findViewById<ImageButton>(R.id.btnPlayerSetupBack)
 
         btnBack?.setOnClickListener {
@@ -550,7 +764,8 @@ class MainActivity : AppCompatActivity() {
             layoutTeam1Header?.visibility = View.GONE
             layoutTeam2Header?.visibility = View.GONE
             layoutBotDifficulty?.visibility = View.GONE
-            btnStart?.text = "START PARTY GAMES ➔"
+            btnStart?.text = "CHOOSE 5 GAMES ➔"
+            btnRandomStart?.visibility = View.VISIBLE
             rowP1?.visibility = View.VISIBLE
             rowP2?.visibility = if (playerCount >= 2) View.VISIBLE else View.GONE
             rowP3?.visibility = if (playerCount >= 3) View.VISIBLE else View.GONE
@@ -560,6 +775,7 @@ class MainActivity : AppCompatActivity() {
             tvLabelP3?.text = "PLAYER NAME"
             tvLabelP4?.text = "PLAYER NAME"
         } else {
+            btnRandomStart?.visibility = View.GONE
             layoutTeam1Header?.visibility = View.GONE
             layoutTeam2Header?.visibility = View.GONE
             tvLabelP1?.text = "PLAYER NAME"
@@ -609,7 +825,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnStart?.setOnClickListener {
-            soundManager.play(SoundManager.SoundType.WHISTLE)
+            soundManager.playStart()
 
             val p1Name = etP1?.text?.toString()?.trim()?.ifEmpty { "Player 1" } ?: "Player 1"
             val p2Name = etP2?.text?.toString()?.trim()?.ifEmpty { "Player 2" } ?: "Player 2"
@@ -637,9 +853,8 @@ class MainActivity : AppCompatActivity() {
             } catch (_: Exception) {}
 
             if (isTournament) {
-                val tourney = TournamentState(totalPlayers = playerCount)
-                val intent = Intent(this, TournamentActivity::class.java).apply {
-                    putExtra("TOURNAMENT_STATE", tourney)
+                val intent = Intent(this, SelectPartyGamesActivity::class.java).apply {
+                    putExtra("PLAYER_COUNT", playerCount)
                     putStringArrayListExtra("PLAYER_NAMES", namesList)
                 }
                 startActivity(intent)
@@ -647,10 +862,58 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, SelectGameActivity::class.java).apply {
                     putExtra("PLAYER_COUNT", playerCount)
                     putExtra("BOT_DIFFICULTY", selectedBotDifficulty)
+                    putExtra("IS_TEAM", isTeam)
                     putStringArrayListExtra("PLAYER_NAMES", namesList)
                 }
                 startActivity(intent)
             }
+        }
+
+        btnRandomStart?.setOnClickListener {
+            soundManager.playStart()
+
+            val p1Name = etP1?.text?.toString()?.trim()?.ifEmpty { "Player 1" } ?: "Player 1"
+            val p2Name = etP2?.text?.toString()?.trim()?.ifEmpty { "Player 2" } ?: "Player 2"
+            val p3Name = etP3?.text?.toString()?.trim()?.ifEmpty { "Player 3" } ?: "Player 3"
+            val p4Name = etP4?.text?.toString()?.trim()?.ifEmpty { "Player 4" } ?: "Player 4"
+
+            prefs.edit().apply {
+                putString("player_1_name", p1Name)
+                putString("player_2_name", p2Name)
+                putString("player_3_name", p3Name)
+                putString("player_4_name", p4Name)
+                apply()
+            }
+
+            val namesList = when (playerCount) {
+                2 -> arrayListOf(p1Name, p2Name)
+                3 -> arrayListOf(p1Name, p2Name, p3Name)
+                else -> arrayListOf(p1Name, p2Name, p3Name, p4Name)
+            }
+
+            try {
+                dialog.dismiss()
+            } catch (_: Exception) {}
+
+            // Select 5 random UNIQUE games (never duplicate in random selection)
+            val randomGames = com.aaritlabs.funtoza.model.GameType
+                .getGamesForPlayerCount(playerCount)
+                .shuffled()
+                .distinct()
+                .take(5)
+
+            val tourney = TournamentState(
+                totalPlayers = playerCount,
+                totalRounds = 5,
+                currentRound = 1,
+                gamePlaylist = ArrayList(randomGames)
+            )
+
+            val intent = Intent(this, TournamentActivity::class.java).apply {
+                putExtra("TOURNAMENT_STATE", tourney)
+                putStringArrayListExtra("PLAYER_NAMES", namesList)
+            }
+            startActivity(intent)
         }
 
         if (!isFinishing && !isDestroyed) {

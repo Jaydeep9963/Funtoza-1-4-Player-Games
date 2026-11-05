@@ -7,7 +7,8 @@ data class TournamentState(
     val totalRounds: Int = 5,
     var currentRound: Int = 1,
     val scores: MutableMap<PlayerId, Int> = mutableMapOf(),
-    val gamePlaylist: List<GameType> = GameType.getGamesForPlayerCount(totalPlayers).shuffled()
+    val gamePlaylist: List<GameType> = GameType.getGamesForPlayerCount(totalPlayers).shuffled(),
+    var id: String = System.currentTimeMillis().toString()
 ) : Serializable {
 
     init {

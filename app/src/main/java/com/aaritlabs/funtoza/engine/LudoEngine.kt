@@ -597,8 +597,24 @@ class LudoEngine(
             if (finishedCount == TOKENS_PER_PLAYER) {
                 val p = players.firstOrNull { it.id == token.owner }
                 if (p != null) {
-                    celebrateWin(p)
-                    return
+                    if (isTeamMode) {
+                        val t1Finished = isPlayerFinished(PlayerId.PLAYER_1) && isPlayerFinished(PlayerId.PLAYER_2)
+                        val t2Finished = isPlayerFinished(PlayerId.PLAYER_3) && isPlayerFinished(PlayerId.PLAYER_4)
+                        if (t1Finished) {
+                            winningTeam = 1
+                            celebrateWin(players[0])
+                            return
+                        } else if (t2Finished) {
+                            winningTeam = 2
+                            celebrateWin(players[2])
+                            return
+                        }
+                        feedbackMessage = "🌟 ${getPlayerDisplayName(p).uppercase()} ALL HOME! TEAMMATE TO WIN"
+                        feedbackTimer = 1.3f
+                    } else {
+                        celebrateWin(p)
+                        return
+                    }
                 }
             }
         }
@@ -614,7 +630,8 @@ class LudoEngine(
 
                 if (!isSafe && outerIdx != -1) {
                     val captured = tokens.firstOrNull { other ->
-                        other.owner != token.owner && other.state == TokenState.ON_BOARD && other.step <= 50 &&
+                        val isEnemy = if (isTeamMode) getPlayerTeam(other.owner) != getPlayerTeam(token.owner) else other.owner != token.owner
+                        isEnemy && other.state == TokenState.ON_BOARD && other.step <= 50 &&
                         playerPaths[other.owner]?.getOrNull(other.step) == landGridPt
                     }
                     if (captured != null) {
@@ -637,11 +654,15 @@ class LudoEngine(
         finishTurn(activeP, earnedBonusRoll)
     }
 
+    private fun isPlayerFinished(pId: PlayerId): Boolean {
+        return tokens.count { it.owner == pId && it.state == TokenState.FINISHED } >= TOKENS_PER_PLAYER
+    }
+
     private fun finishTurn(player: Player, bonusFromCaptureOrHome: Boolean = false) {
         // Rolling a 6 or capturing/finishing earns another turn (max 2 consecutive extra rolls)
         val earnsExtraRoll = (finalDiceValue == 6 || bonusFromCaptureOrHome) && consecutiveSixes < 2
 
-        if (earnsExtraRoll) {
+        if (earnsExtraRoll && (!isTeamMode || !isPlayerFinished(player.id))) {
             consecutiveSixes++
             soundManager.play(SoundManager.SoundType.TAP, 1.0f)
             if (player.isBot) {
@@ -649,13 +670,32 @@ class LudoEngine(
             }
         } else {
             consecutiveSixes = 0
-            currentTurnIndex = (currentTurnIndex + 1) % players.size
+            advanceToNextActivePlayer()
+        }
+    }
 
+    private fun advanceToNextActivePlayer() {
+        for (i in 1..players.size) {
+            currentTurnIndex = (currentTurnIndex + 1) % players.size
             val nextP = getCurrentPlayer()
-            if (nextP != null && nextP.isBot) {
-                botThinkTimer = getBotDelay()
+            if (nextP != null) {
+                if (isTeamMode && isPlayerFinished(nextP.id)) {
+                    continue
+                }
+                if (nextP.isBot) {
+                    botThinkTimer = getBotDelay()
+                }
+                break
             }
         }
+    }
+
+    override fun getTeamScoreString(team: Int): String {
+        val (pA, pB) = if (team == 1) Pair(PlayerId.PLAYER_1, PlayerId.PLAYER_2) else Pair(PlayerId.PLAYER_3, PlayerId.PLAYER_4)
+        val tAHome = tokens.count { it.owner == pA && it.state == TokenState.FINISHED }
+        val tBHome = tokens.count { it.owner == pB && it.state == TokenState.FINISHED }
+        val bothFinished = (tAHome >= TOKENS_PER_PLAYER && tBHome >= TOKENS_PER_PLAYER)
+        return if (bothFinished) "BOTH WON 🏆" else "${tAHome + tBHome}/${TOKENS_PER_PLAYER * 2} Tokens Home"
     }
 
     private fun botChooseTokenMove() {

@@ -498,7 +498,10 @@ class OopsEngine(
             OopsCardType.OOPS -> {
                 // Must have at least 1 pawn in Start, and at least 1 opponent pawn on ring
                 val pawnInStart = myPawns.firstOrNull { it.location == OopsPawnLocation.IN_START }
-                val opponentOnRing = pawns.filter { it.owner != activeP.id && it.location == OopsPawnLocation.ON_RING }
+                val opponentOnRing = pawns.filter { 
+                    val isEnemy = if (isTeamMode) getPlayerTeam(it.owner) != getPlayerTeam(activeP.id) else it.owner != activeP.id
+                    isEnemy && it.location == OopsPawnLocation.ON_RING 
+                }
 
                 if (pawnInStart != null && opponentOnRing.isNotEmpty()) {
                     clearEligibility()
@@ -518,7 +521,10 @@ class OopsEngine(
             OopsCardType.SWITCH -> {
                 // Card 11: ALWAYS present choice (+11 OR SWAP) if any legal action exists!
                 val ownOnRing = myPawns.filter { it.location == OopsPawnLocation.ON_RING }
-                val opponentsOnRing = pawns.filter { it.owner != activeP.id && it.location == OopsPawnLocation.ON_RING }
+                val opponentsOnRing = pawns.filter { 
+                    val isEnemy = if (isTeamMode) getPlayerTeam(it.owner) != getPlayerTeam(activeP.id) else it.owner != activeP.id
+                    isEnemy && it.location == OopsPawnLocation.ON_RING 
+                }
                 val canSwap = ownOnRing.isNotEmpty() && opponentsOnRing.isNotEmpty()
                 val canMove11 = myPawns.any { canPawnMoveForward(it, 11) }
 
@@ -864,7 +870,10 @@ class OopsEngine(
     private fun checkKnockoutAt(ringIdx: Int, attacker: OopsPawn) {
         val opponent = pawns.firstOrNull { it.location == OopsPawnLocation.ON_RING && it.ringIndex == ringIdx && it != attacker }
         if (opponent != null) {
-            pendingKnockbacks.add(opponent)
+            val isEnemy = if (isTeamMode) getPlayerTeam(opponent.owner) != getPlayerTeam(attacker.owner) else opponent.owner != attacker.owner
+            if (isEnemy) {
+                pendingKnockbacks.add(opponent)
+            }
         }
     }
 
@@ -884,6 +893,10 @@ class OopsEngine(
         }
     }
 
+    private fun isPlayerFinished(pId: PlayerId): Boolean {
+        return pawns.count { it.owner == pId && it.location == OopsPawnLocation.IN_CASTLE } >= PAWNS_PER_PLAYER
+    }
+
     private fun checkWinOrFinishTurn() {
         val activeP = getCurrentPlayer() ?: return
         val castleCount = pawns.count { it.owner == activeP.id && it.location == OopsPawnLocation.IN_CASTLE }
@@ -896,12 +909,31 @@ class OopsEngine(
             particles.spawnExplosion(cx, cy, Color.parseColor("#FFD54F"), 60)
             soundManager.play(SoundManager.SoundType.VICTORY)
             triggerVibration(120)
-            endRound(activeP)
-            return
+
+            if (isTeamMode) {
+                val t1Both = isPlayerFinished(PlayerId.PLAYER_1) && isPlayerFinished(PlayerId.PLAYER_2)
+                val t2Both = isPlayerFinished(PlayerId.PLAYER_3) && isPlayerFinished(PlayerId.PLAYER_4)
+                if (t1Both) {
+                    winningTeam = 1
+                    endRound(players[0])
+                    return
+                } else if (t2Both) {
+                    winningTeam = 2
+                    endRound(players[2])
+                    return
+                }
+                feedbackMessage = "🌟 ${getPlayerDisplayName(activeP).uppercase()} ALL HOME! TEAMMATE TO WIN"
+                feedbackTimer = 1.3f
+                finishTurn()
+                return
+            } else {
+                endRound(activeP)
+                return
+            }
         }
 
-        // If card was 2, draw again!
-        if (currentCard?.value == 2) {
+        // If card was 2, draw again! (unless player has already finished)
+        if (currentCard?.value == 2 && (!isTeamMode || !isPlayerFinished(activeP.id))) {
             feedbackMessage = "DRAW AGAIN!"
             feedbackTimer = 0.65f
             phase = OopsPhase.WAITING_DRAW
@@ -916,13 +948,32 @@ class OopsEngine(
         selectedOwnPawn = null
         chosenMoveDelta = null
         currentCard = null
-        currentTurnIndex = (currentTurnIndex + 1) % players.size
         phase = OopsPhase.WAITING_DRAW
+        advanceToNextActivePlayer()
+    }
 
-        val nextP = getCurrentPlayer()
-        if (nextP != null && nextP.isBot) {
-            botThinkTimer = getBotDelay()
+    private fun advanceToNextActivePlayer() {
+        for (i in 1..players.size) {
+            currentTurnIndex = (currentTurnIndex + 1) % players.size
+            val nextP = getCurrentPlayer()
+            if (nextP != null) {
+                if (isTeamMode && isPlayerFinished(nextP.id)) {
+                    continue
+                }
+                if (nextP.isBot) {
+                    botThinkTimer = getBotDelay()
+                }
+                break
+            }
         }
+    }
+
+    override fun getTeamScoreString(team: Int): String {
+        val (pA, pB) = if (team == 1) Pair(PlayerId.PLAYER_1, PlayerId.PLAYER_2) else Pair(PlayerId.PLAYER_3, PlayerId.PLAYER_4)
+        val cA = pawns.count { it.owner == pA && it.location == OopsPawnLocation.IN_CASTLE }
+        val cB = pawns.count { it.owner == pB && it.location == OopsPawnLocation.IN_CASTLE }
+        val bothWon = (cA >= PAWNS_PER_PLAYER && cB >= PAWNS_PER_PLAYER)
+        return if (bothWon) "BOTH IN CASTLE 🏆" else "${cA + cB}/${PAWNS_PER_PLAYER * 2} in Castle"
     }
 
     private fun clearEligibility() {
@@ -1160,7 +1211,10 @@ class OopsEngine(
                     if (btn2Hit.contains(touchX, touchY)) {
                         soundManager.play(SoundManager.SoundType.TAP, 0.9f)
                         val ownOnRing = myPawns.filter { it.location == OopsPawnLocation.ON_RING }
-                        val opponentsOnRing = pawns.filter { it.owner != activeP.id && it.location == OopsPawnLocation.ON_RING }
+                        val opponentsOnRing = pawns.filter { 
+                    val isEnemy = if (isTeamMode) getPlayerTeam(it.owner) != getPlayerTeam(activeP.id) else it.owner != activeP.id
+                    isEnemy && it.location == OopsPawnLocation.ON_RING 
+                }
                         if (ownOnRing.isNotEmpty() && opponentsOnRing.isNotEmpty()) {
                             if (ownOnRing.size == 1) {
                                 selectedOwnPawn = ownOnRing.first()
@@ -1231,7 +1285,10 @@ class OopsEngine(
                 if (touched != null) {
                     selectedOwnPawn = touched
                     clearEligibility()
-                    val opponentsOnRing = pawns.filter { it.owner != activeP.id && it.location == OopsPawnLocation.ON_RING }
+                    val opponentsOnRing = pawns.filter { 
+                    val isEnemy = if (isTeamMode) getPlayerTeam(it.owner) != getPlayerTeam(activeP.id) else it.owner != activeP.id
+                    isEnemy && it.location == OopsPawnLocation.ON_RING 
+                }
                     opponentsOnRing.forEach { it.isEligible = true }
                     phase = OopsPhase.CHOOSING_SWITCH_OPPONENT
                     soundManager.play(SoundManager.SoundType.TAP, 0.8f)

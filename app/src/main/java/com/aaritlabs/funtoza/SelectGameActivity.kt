@@ -20,6 +20,7 @@ class SelectGameActivity : AppCompatActivity() {
     private lateinit var soundManager: SoundManager
     private var playerCount: Int = 2
     private var botDifficulty: Int = 1
+    private var isTeam: Boolean = false
     private var playerNames: ArrayList<String> = arrayListOf()
 
     private val starViews = mutableListOf<View>()
@@ -34,6 +35,7 @@ class SelectGameActivity : AppCompatActivity() {
 
         playerCount = intent.getIntExtra("PLAYER_COUNT", 2)
         botDifficulty = intent.getIntExtra("BOT_DIFFICULTY", 1)
+        isTeam = intent.getBooleanExtra("IS_TEAM", false)
         playerNames = intent.getStringArrayListExtra("PLAYER_NAMES") ?: arrayListOf()
 
         val btnBack = findViewById<ImageButton>(R.id.btnSelectGameBack)
@@ -48,6 +50,9 @@ class SelectGameActivity : AppCompatActivity() {
         val cardKnife = findViewById<LinearLayout>(R.id.cardSelectKnife)
         val cardTicTacToe = findViewById<LinearLayout>(R.id.cardSelectTicTacToe)
         val cardOops = findViewById<LinearLayout>(R.id.cardSelectOops)
+        val cardSeaBattle = findViewById<LinearLayout>(R.id.cardSelectSeaBattle)
+        val cardDotsAndBoxes = findViewById<LinearLayout>(R.id.cardSelectDotsAndBoxes)
+        val cardMemory = findViewById<LinearLayout>(R.id.cardSelectMemory)
 
         if (playerCount == 1) {
             tvSelectSnakeTitle?.text = "SLITHER SNAKE"
@@ -63,11 +68,27 @@ class SelectGameActivity : AppCompatActivity() {
         findViewById<View>(R.id.selectStarBottomLeft)?.let { starViews.add(it) }
         findViewById<View>(R.id.selectStarBottomRight)?.let { starViews.add(it) }
 
-        // Tic Tac Toe is exclusively for 1 & 2 players
-        cardTicTacToe.visibility = if (playerCount <= 2) View.VISIBLE else View.GONE
+        // Filter game cards based on maxPlayers configured in GameType
+        cardSnake.visibility = if (playerCount <= GameType.NEON_SNAKE.maxPlayers) View.VISIBLE else View.GONE
+        cardTicTacToe.visibility = if (playerCount <= GameType.TIC_TAC_TOE.maxPlayers) View.VISIBLE else View.GONE
+        cardLudo.visibility = if (playerCount <= GameType.LUDO.maxPlayers) View.VISIBLE else View.GONE
+        cardSoccer.visibility = if (playerCount <= GameType.FINGER_SOCCER.maxPlayers) View.VISIBLE else View.GONE
+        cardSnakesAndLadders.visibility = if (playerCount <= GameType.SNAKES_AND_LADDERS.maxPlayers) View.VISIBLE else View.GONE
+        cardKnife.visibility = if (playerCount <= GameType.TARGET_BLITZ.maxPlayers) View.VISIBLE else View.GONE
+        cardOops.visibility = if (playerCount <= GameType.OOPS.maxPlayers) View.VISIBLE else View.GONE
+        cardSeaBattle.visibility = if (playerCount <= GameType.SEA_BATTLE.maxPlayers) View.VISIBLE else View.GONE
+        cardDotsAndBoxes.visibility = if (playerCount <= GameType.DOTS_AND_BOXES.maxPlayers) View.VISIBLE else View.GONE
+        cardMemory.visibility = if (playerCount <= GameType.MEMORY.maxPlayers) View.VISIBLE else View.GONE
 
         // Set matchup subtitle
         tvMatchup.text = when {
+            isTeam -> {
+                val p1 = playerNames.getOrElse(0) { "P1" }
+                val p2 = playerNames.getOrElse(1) { "P2" }
+                val p3 = playerNames.getOrElse(2) { "P3" }
+                val p4 = playerNames.getOrElse(3) { "P4" }
+                "TEAM 1 ($p1+$p2) ⚔️ TEAM 2 ($p3+$p4)"
+            }
             playerCount == 1 -> {
                 val diffStr = when (botDifficulty) {
                     0 -> "Easy"
@@ -100,6 +121,9 @@ class SelectGameActivity : AppCompatActivity() {
         cardKnife.setOnClickListener { launchGame(GameType.TARGET_BLITZ) }
         cardTicTacToe.setOnClickListener { launchGame(GameType.TIC_TAC_TOE) }
         cardOops.setOnClickListener { launchGame(GameType.OOPS) }
+        cardSeaBattle.setOnClickListener { launchGame(GameType.SEA_BATTLE) }
+        cardDotsAndBoxes.setOnClickListener { launchGame(GameType.DOTS_AND_BOXES) }
+        cardMemory.setOnClickListener { launchGame(GameType.MEMORY) }
 
         startSparkleStarsAnimation()
     }
@@ -145,6 +169,7 @@ class SelectGameActivity : AppCompatActivity() {
             putExtra("GAME_TYPE", gameType.name)
             putExtra("PLAYER_COUNT", playerCount)
             putExtra("BOT_DIFFICULTY", botDifficulty)
+            putExtra("IS_TEAM", isTeam)
             putStringArrayListExtra("PLAYER_NAMES", playerNames)
         }
         startActivity(intent)

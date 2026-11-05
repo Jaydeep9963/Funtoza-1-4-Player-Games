@@ -7,7 +7,10 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:background="@drawable/bg_cosmic_neon"
-    android:padding="20dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
     tools:context=".TournamentActivity">
 
     <!-- Header Glass Pill -->
@@ -19,8 +22,8 @@
         android:background="@drawable/bg_glass_pill"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/tvTourneyTitle"
@@ -28,7 +31,7 @@
             android:layout_height="wrap_content"
             android:text="🏆 CUP TOURNAMENT"
             android:textColor="@color/accent_gold"
-            android:textSize="26sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:letterSpacing="0.06" />
 
@@ -38,12 +41,116 @@
             android:layout_height="wrap_content"
             android:text="Round 1 of 5"
             android:textColor="@color/accent_cyan"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:layout_marginTop="2dp" />
     </LinearLayout>
 
-    <!-- Podium Container -->
+    <!-- Next Game Preview Glass Card (Fills previously empty screen area!) -->
+    <LinearLayout
+        android:id="@+id/cardNextGamePreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_glass_card_selector"
+        android:padding="14dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp">
+
+        <!-- Header Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvNextGameBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NEXT MATCH"
+                android:textColor="@color/neon_pink"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:background="@drawable/bg_glass_pill"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvNextRoundNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ROUND 1/5"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Game Info Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tvNextGameEmoji"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="@drawable/bg_glass_pill"
+                android:text="🎯"
+                android:textSize="28sp"
+                android:gravity="center" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvNextGameTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TARGET BLITZ"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvNextGameDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Throw daggers into the spinning timber! Avoid colliding knives!"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Round Timeline Indicators -->
+        <LinearLayout
+            android:id="@+id/layoutRoundTimeline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="12dp" />
+    </LinearLayout>
+
+    <!-- Podium Standings Container -->
     <LinearLayout
         android:id="@+id/podiumContainer"
         android:layout_width="match_parent"
@@ -51,8 +158,8 @@
         android:layout_weight="1"
         android:orientation="horizontal"
         android:gravity="bottom|center_horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="14dp" />
 
     <!-- Action Buttons -->
     <LinearLayout
@@ -63,23 +170,41 @@
 
         <Button
             android:id="@+id/btnTourneyExit"
-            android:layout_width="140dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_marginEnd="14dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/bg_glass_card_selector"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="0dp"
+            android:includeFontPadding="false"
+            android:gravity="center"
             android:text="LEAVE CUP"
             android:textColor="@color/player_1_red"
-            android:textStyle="bold" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:maxLines="1" />
 
         <Button
             android:id="@+id/btnNextMatch"
-            android:layout_width="200dp"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_weight="1.6"
             android:background="@drawable/btn_accent"
-            android:text="NEXT MATCH ➔"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="0dp"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:text="PLAY ROUND 1 ➔"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+            android:maxLines="1"
+            android:ellipsize="end" />
     </LinearLayout>
 
 </LinearLayout>

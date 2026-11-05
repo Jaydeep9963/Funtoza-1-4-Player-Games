@@ -55,6 +55,27 @@ enum class GameType(
         "🃏",
         "#FF9500",
         4
+    ),
+    SEA_BATTLE(
+        "Sea Battle",
+        "Naval combat! Position your fleet, fire cannons, and sink all rival warships!",
+        "⚓",
+        "#00B4D8",
+        4
+    ),
+    DOTS_AND_BOXES(
+        "Dots & Boxes",
+        "Connect dots, close boxes, claim territory, and outsmart rivals!",
+        "⏹️",
+        "#8A2BE2",
+        4
+    ),
+    MEMORY(
+        "Memory",
+        "Flip cards, find matching pairs, remember card positions, and collect the most sets!",
+        "🧠",
+        "#FF2A85",
+        4
     );
 
     companion object {

@@ -24,7 +24,17 @@ abstract class BaseGameEngine(
     var height: Float = 0f
     var isInitialized = false
     var isGameOver = false
+    var isTeamMode = false
+    var winningTeam: Int? = null
     var winner: Player? = null
+
+    fun getPlayerTeam(playerId: PlayerId): Int {
+        return if (playerId == PlayerId.PLAYER_1 || playerId == PlayerId.PLAYER_2) 1 else 2
+    }
+
+    open fun getTeamScoreString(team: Int): String {
+        return if (winningTeam == team) "TEAM VICTORY 👑" else "RUNNER-UP"
+    }
 
     // Touch boundaries for each player button/zone
     val controlZones = mutableMapOf<PlayerId, RectF>()

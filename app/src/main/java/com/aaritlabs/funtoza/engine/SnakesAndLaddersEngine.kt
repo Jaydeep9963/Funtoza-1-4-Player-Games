@@ -116,6 +116,7 @@ class SnakesAndLaddersEngine(
     // Dynamic Dice buttons for User Side interaction
     private val bottomDiceRect = RectF()
     private val topDiceRect = RectF()
+    private val finishedPlayers = mutableSetOf<PlayerId>()
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val random = Random(System.currentTimeMillis())
@@ -123,6 +124,7 @@ class SnakesAndLaddersEngine(
     override fun initGame() {
         playerPositions.clear()
         playerVisualPositions.clear()
+        finishedPlayers.clear()
         moveQueue.clear()
         isGameOver = false
         isRolling = false
@@ -412,7 +414,7 @@ class SnakesAndLaddersEngine(
 
                     // Check win after sliding (e.g. from ladder)
                     if (slideEndTile == totalTiles) {
-                        celebrateWin(activeP)
+                        if (handleTile100Landed(activeP)) return
                         return
                     }
 
@@ -469,10 +471,36 @@ class SnakesAndLaddersEngine(
         }
     }
 
+    private fun handleTile100Landed(player: Player): Boolean {
+        if (isTeamMode) {
+            finishedPlayers.add(player.id)
+            val t1Both = finishedPlayers.contains(PlayerId.PLAYER_1) && finishedPlayers.contains(PlayerId.PLAYER_2)
+            val t2Both = finishedPlayers.contains(PlayerId.PLAYER_3) && finishedPlayers.contains(PlayerId.PLAYER_4)
+            if (t1Both) {
+                winningTeam = 1
+                celebrateWin(players[0])
+                return true
+            } else if (t2Both) {
+                winningTeam = 2
+                celebrateWin(players[2])
+                return true
+            }
+            overshootMessage = "🌟 ${getPlayerDisplayName(player).uppercase()} AT 100! TEAMMATE TO WIN"
+            overshootWaitTimer = 1.3f
+            soundManager.play(SoundManager.SoundType.GOAL, 0.9f)
+            triggerVibration(60)
+            finishTurn(player)
+            return false
+        } else {
+            celebrateWin(player)
+            return true
+        }
+    }
+
     private fun onPawnLanded(player: Player, tile: Int) {
         // 1. Check Win
         if (tile == totalTiles) {
-            celebrateWin(player)
+            if (handleTile100Landed(player)) return
             return
         }
 
@@ -513,8 +541,8 @@ class SnakesAndLaddersEngine(
     }
 
     private fun finishTurn(player: Player) {
-        // Rolling a 6 gives an extra turn! (max 2 extra turns)
-        if (finalDiceValue == 6 && consecutiveSixes < 2) {
+        // Rolling a 6 gives an extra turn! (max 2 extra turns, unless player already at 100)
+        if (finalDiceValue == 6 && consecutiveSixes < 2 && (!isTeamMode || !finishedPlayers.contains(player.id))) {
             consecutiveSixes++
             soundManager.play(SoundManager.SoundType.TAP, 1.0f)
             if (player.isBot) {
@@ -522,13 +550,32 @@ class SnakesAndLaddersEngine(
             }
         } else {
             consecutiveSixes = 0
-            currentTurnIndex = (currentTurnIndex + 1) % players.size
+            advanceToNextActivePlayer()
+        }
+    }
 
+    private fun advanceToNextActivePlayer() {
+        for (i in 1..players.size) {
+            currentTurnIndex = (currentTurnIndex + 1) % players.size
             val nextP = getCurrentPlayer()
-            if (nextP != null && nextP.isBot) {
-                botThinkTimer = getBotDelay()
+            if (nextP != null) {
+                if (isTeamMode && finishedPlayers.contains(nextP.id)) {
+                    continue
+                }
+                if (nextP.isBot) {
+                    botThinkTimer = getBotDelay()
+                }
+                break
             }
         }
+    }
+
+    override fun getTeamScoreString(team: Int): String {
+        val (pA, pB) = if (team == 1) Pair(PlayerId.PLAYER_1, PlayerId.PLAYER_2) else Pair(PlayerId.PLAYER_3, PlayerId.PLAYER_4)
+        val posA = playerPositions[pA] ?: 1
+        val posB = playerPositions[pB] ?: 1
+        val bothWon = finishedPlayers.contains(pA) && finishedPlayers.contains(pB)
+        return if (bothWon) "BOTH AT 100 🏆" else "Pips: $posA & $posB"
     }
 
     private fun celebrateWin(player: Player) {

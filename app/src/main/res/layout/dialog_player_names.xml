@@ -655,5 +655,19 @@
             android:textStyle="bold"
             android:letterSpacing="0.06" />
 
+        <!-- Optional Quick Play Random 5 Button (Shown in Party Games) -->
+        <Button
+            android:id="@+id/btnPlayerSetupRandom"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_glass_card_selector"
+            android:text="🎲 QUICK PLAY (RANDOM 5 GAMES)"
+            android:textColor="@color/accent_gold"
+            android:textSize="13.5sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.04"
+            android:visibility="gone" />
+
     </LinearLayout>
 </FrameLayout>
