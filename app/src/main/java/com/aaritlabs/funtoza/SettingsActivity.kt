@@ -110,6 +110,15 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        // Long press for testers to toggle/reset VIP state and test ads freely
+        cardRemoveAds?.setOnLongClickListener {
+            val prefs = getSharedPreferences(com.aaritlabs.funtoza.monetization.BillingManager.PREFS_NAME, Context.MODE_PRIVATE)
+            prefs.edit().clear().apply()
+            Toast.makeText(this, "🔧 Developer Test: VIP status reset! Ads enabled.", Toast.LENGTH_SHORT).show()
+            updateVipStoreUI()
+            true
+        }
+
         cardVipBundle?.setOnClickListener {
             soundManager.playClick()
             if (!com.aaritlabs.funtoza.monetization.BillingManager.isVipPartyActive(this)) {
