@@ -354,17 +354,23 @@ class GameActivity : AppCompatActivity() {
             GameType.SEA_BATTLE -> SeaBattleEngine(this, playerCount, soundManager, botDifficulty)
             GameType.DOTS_AND_BOXES -> DotsAndBoxesEngine(this, playerCount, soundManager, botDifficulty)
             GameType.MEMORY -> MemoryEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.WHACK_A_MOLE -> WhackAMoleEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.MINI_GOLF -> MiniGolfEngine(this, playerCount, soundManager, botDifficulty)
         }
 
         engine.isTeamMode = isTeamMode
         engine.playerNames = playerNames
-        engine.players.forEach { p ->
-            p.score = sessionWins[p.id] ?: 0
+        if (gameType != GameType.WHACK_A_MOLE && gameType != GameType.MINI_GOLF && gameType != GameType.MEMORY && gameType != GameType.DOTS_AND_BOXES) {
+            engine.players.forEach { p ->
+                p.score = sessionWins[p.id] ?: 0
+            }
         }
         engine.onRoundOverListener = { winner ->
             if (winner != null) {
                 sessionWins[winner.id] = (sessionWins[winner.id] ?: 0) + 1
-                winner.score = sessionWins[winner.id] ?: 1
+                if (gameType != GameType.WHACK_A_MOLE && gameType != GameType.MINI_GOLF && gameType != GameType.MEMORY && gameType != GameType.DOTS_AND_BOXES) {
+                    winner.score = sessionWins[winner.id] ?: 1
+                }
             }
             runOnUiThread {
                 showWinnerDialog(winner, engine)

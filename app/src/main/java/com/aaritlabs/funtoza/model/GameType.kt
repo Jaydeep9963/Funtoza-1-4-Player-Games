@@ -76,6 +76,20 @@ enum class GameType(
         "🧠",
         "#FF2A85",
         4
+    ),
+    WHACK_A_MOLE(
+        "Whack A Mole",
+        "Whack moles wearing your player's bandana! Fast reflexes, avoid penalties, and grab golden moles!",
+        "🐹",
+        "#FF9500",
+        4
+    ),
+    MINI_GOLF(
+        "Mini Golf",
+        "Putt, bounce off neon rails, sink holes-in-one, and outplay rivals on cosmic courses!",
+        "⛳",
+        "#00E5FF",
+        4
     );
 
     companion object {

@@ -64,6 +64,8 @@ class SelectGameActivity : AppCompatActivity() {
         val cardSeaBattle = findViewById<LinearLayout>(R.id.cardSelectSeaBattle)
         val cardDotsAndBoxes = findViewById<LinearLayout>(R.id.cardSelectDotsAndBoxes)
         val cardMemory = findViewById<LinearLayout>(R.id.cardSelectMemory)
+        val cardWhackAMole = findViewById<LinearLayout>(R.id.cardSelectWhackAMole)
+        val cardMiniGolf = findViewById<LinearLayout>(R.id.cardSelectMiniGolf)
 
         if (playerCount == 1) {
             tvSelectSnakeTitle?.text = "SLITHER SNAKE"
@@ -90,6 +92,8 @@ class SelectGameActivity : AppCompatActivity() {
         cardSeaBattle.visibility = if (playerCount <= GameType.SEA_BATTLE.maxPlayers) View.VISIBLE else View.GONE
         cardDotsAndBoxes.visibility = if (playerCount <= GameType.DOTS_AND_BOXES.maxPlayers) View.VISIBLE else View.GONE
         cardMemory.visibility = if (playerCount <= GameType.MEMORY.maxPlayers) View.VISIBLE else View.GONE
+        cardWhackAMole.visibility = if (playerCount <= GameType.WHACK_A_MOLE.maxPlayers) View.VISIBLE else View.GONE
+        cardMiniGolf.visibility = if (playerCount <= GameType.MINI_GOLF.maxPlayers) View.VISIBLE else View.GONE
 
         // Set matchup subtitle
         tvMatchup.text = when {
@@ -135,6 +139,8 @@ class SelectGameActivity : AppCompatActivity() {
         cardSeaBattle.setOnClickListener { checkAndLaunchGame(GameType.SEA_BATTLE) }
         cardDotsAndBoxes.setOnClickListener { checkAndLaunchGame(GameType.DOTS_AND_BOXES) }
         cardMemory.setOnClickListener { checkAndLaunchGame(GameType.MEMORY) }
+        cardWhackAMole.setOnClickListener { checkAndLaunchGame(GameType.WHACK_A_MOLE) }
+        cardMiniGolf.setOnClickListener { checkAndLaunchGame(GameType.MINI_GOLF) }
 
         startSparkleStarsAnimation()
     }
