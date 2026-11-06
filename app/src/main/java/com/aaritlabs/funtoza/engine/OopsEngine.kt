@@ -115,36 +115,36 @@ class OopsEngine(
     // Start Base pedestal slots per player (3 pawns each)
     private val startSlots = mutableMapOf<PlayerId, List<Point>>()
 
-    // Start ring entry index for each player
+    // Start ring entry index for each player (clockwise around perimeter)
     private val startRingEntry = mapOf(
-        PlayerId.PLAYER_1 to 4,   // Bottom side
-        PlayerId.PLAYER_4 to 19,  // Right side
-        PlayerId.PLAYER_2 to 34,  // Top side
-        PlayerId.PLAYER_3 to 49   // Left side
+        PlayerId.PLAYER_1 to 4,   // Bottom side (moves Left)
+        PlayerId.PLAYER_3 to 19,  // Left side (moves Up)
+        PlayerId.PLAYER_2 to 34,  // Top side (moves Right)
+        PlayerId.PLAYER_4 to 49   // Right side (moves Down)
     )
 
     // Safe lane entry index for each player (where they turn into lane)
     private val safeLaneEntry = mapOf(
         PlayerId.PLAYER_1 to 2,
-        PlayerId.PLAYER_4 to 17,
+        PlayerId.PLAYER_3 to 17,
         PlayerId.PLAYER_2 to 32,
-        PlayerId.PLAYER_3 to 47
+        PlayerId.PLAYER_4 to 47
     )
 
-    // 8 Slides (2 per side: 1 short of length 3, 1 long of length 4)
+    // 8 Slides in clockwise perimeter order (2 per side: 1 short of length 3, 1 long of length 4)
     private val slides = listOf(
         // Bottom (Red / P1)
         OopsSlide(PlayerId.PLAYER_1, 1, 3),
         OopsSlide(PlayerId.PLAYER_1, 9, 4),
-        // Right (Yellow / P4)
-        OopsSlide(PlayerId.PLAYER_4, 16, 3),
-        OopsSlide(PlayerId.PLAYER_4, 24, 4),
+        // Left (Green / P3)
+        OopsSlide(PlayerId.PLAYER_3, 16, 3),
+        OopsSlide(PlayerId.PLAYER_3, 24, 4),
         // Top (Blue / P2)
         OopsSlide(PlayerId.PLAYER_2, 31, 3),
         OopsSlide(PlayerId.PLAYER_2, 39, 4),
-        // Left (Green / P3)
-        OopsSlide(PlayerId.PLAYER_3, 46, 3),
-        OopsSlide(PlayerId.PLAYER_3, 54, 4)
+        // Right (Yellow / P4)
+        OopsSlide(PlayerId.PLAYER_4, 46, 3),
+        OopsSlide(PlayerId.PLAYER_4, 54, 4)
     )
 
     // Game State & Components
@@ -188,32 +188,32 @@ class OopsEngine(
     private fun buildGridCoordinates() {
         ringGridPoints.clear()
 
-        // 1. Bottom row (Left to Right): tiles 0..14
-        for (x in 0..14) ringGridPoints.add(Point(x, 15))
-        // 2. Right col (Bottom to Top): tiles 15..29
-        for (y in 15 downTo 1) ringGridPoints.add(Point(15, y))
-        // 3. Top row (Right to Left): tiles 30..44
-        for (x in 15 downTo 1) ringGridPoints.add(Point(x, 0))
-        // 4. Left col (Top to Bottom): tiles 45..59
-        for (y in 0..14) ringGridPoints.add(Point(0, y))
+        // 1. Bottom row (Right to Left): tiles 0..14 (moves LEFT clockwise)
+        for (x in 15 downTo 1) ringGridPoints.add(Point(x, 15))
+        // 2. Left col (Bottom to Top): tiles 15..29 (moves UP clockwise)
+        for (y in 15 downTo 1) ringGridPoints.add(Point(0, y))
+        // 3. Top row (Left to Right): tiles 30..44 (moves RIGHT clockwise)
+        for (x in 0..14) ringGridPoints.add(Point(x, 0))
+        // 4. Right col (Top to Bottom): tiles 45..59 (moves DOWN clockwise)
+        for (y in 0..14) ringGridPoints.add(Point(15, y))
 
         // Safe Lanes (5 steps inward towards Castle)
-        safeLanes[PlayerId.PLAYER_1] = (14 downTo 10).map { y -> Point(2, y) }
-        safeLanes[PlayerId.PLAYER_4] = (14 downTo 10).map { x -> Point(x, 13) }
-        safeLanes[PlayerId.PLAYER_2] = (1..5).map { y -> Point(13, y) }
-        safeLanes[PlayerId.PLAYER_3] = (1..5).map { x -> Point(x, 2) }
+        safeLanes[PlayerId.PLAYER_1] = (14 downTo 10).map { y -> Point(13, y) }
+        safeLanes[PlayerId.PLAYER_3] = (1..5).map { x -> Point(x, 13) }
+        safeLanes[PlayerId.PLAYER_2] = (1..5).map { y -> Point(2, y) }
+        safeLanes[PlayerId.PLAYER_4] = (14 downTo 10).map { x -> Point(x, 2) }
 
         // Castle Goals
-        castleGoals[PlayerId.PLAYER_1] = Point(2, 9)
-        castleGoals[PlayerId.PLAYER_4] = Point(9, 13)
-        castleGoals[PlayerId.PLAYER_2] = Point(13, 6)
-        castleGoals[PlayerId.PLAYER_3] = Point(6, 2)
+        castleGoals[PlayerId.PLAYER_1] = Point(13, 9)
+        castleGoals[PlayerId.PLAYER_3] = Point(6, 13)
+        castleGoals[PlayerId.PLAYER_2] = Point(2, 6)
+        castleGoals[PlayerId.PLAYER_4] = Point(9, 2)
 
         // Start Base Pedestals (4 pawns per player in a clean 2x2 grid, separated from running space & safe lanes)
-        startSlots[PlayerId.PLAYER_1] = listOf(Point(4, 12), Point(5, 12), Point(4, 13), Point(5, 13))
-        startSlots[PlayerId.PLAYER_4] = listOf(Point(12, 9), Point(13, 9), Point(12, 10), Point(13, 10))
-        startSlots[PlayerId.PLAYER_2] = listOf(Point(10, 2), Point(11, 2), Point(10, 3), Point(11, 3))
-        startSlots[PlayerId.PLAYER_3] = listOf(Point(2, 5), Point(3, 5), Point(2, 6), Point(3, 6))
+        startSlots[PlayerId.PLAYER_1] = listOf(Point(10, 12), Point(11, 12), Point(10, 13), Point(11, 13))
+        startSlots[PlayerId.PLAYER_3] = listOf(Point(2, 10), Point(3, 10), Point(2, 11), Point(3, 11))
+        startSlots[PlayerId.PLAYER_2] = listOf(Point(4, 2), Point(5, 2), Point(4, 3), Point(5, 3))
+        startSlots[PlayerId.PLAYER_4] = listOf(Point(12, 4), Point(13, 4), Point(12, 5), Point(13, 5))
     }
 
     override fun initGame() {
@@ -330,9 +330,22 @@ class OopsEngine(
         bottomActionRect.set(width / 2f - actionW / 2f, bottomActionY - actionH / 2f, width / 2f + actionW / 2f, bottomActionY + actionH / 2f)
     }
 
+    private val turnOrder: List<PlayerId>
+        get() = when (totalPlayers) {
+            4 -> listOf(PlayerId.PLAYER_1, PlayerId.PLAYER_3, PlayerId.PLAYER_2, PlayerId.PLAYER_4)
+            3 -> listOf(PlayerId.PLAYER_1, PlayerId.PLAYER_3, PlayerId.PLAYER_2)
+            else -> listOf(PlayerId.PLAYER_1, PlayerId.PLAYER_2)
+        }
+
     private fun getCurrentPlayer(): Player? {
         if (players.isEmpty()) return null
-        return players[currentTurnIndex % players.size]
+        val order = turnOrder
+        val targetId = order[currentTurnIndex % order.size]
+        return players.firstOrNull { it.id == targetId }
+    }
+
+    private fun isPlayerAtBottom(player: Player): Boolean {
+        return player.id == PlayerId.PLAYER_1 || player.id == PlayerId.PLAYER_4
     }
 
     private fun getBotDelay(): Float = when (botDifficulty) {
@@ -343,8 +356,7 @@ class OopsEngine(
 
     private fun getActiveActionInfo(): Pair<RectF, Float> {
         val activeP = getCurrentPlayer() ?: return Pair(bottomActionRect, 0f)
-        val index = players.indexOf(activeP).coerceAtLeast(0)
-        val isBottom = (index == 0 || index == 3)
+        val isBottom = isPlayerAtBottom(activeP)
         return if (isBottom) {
             Pair(bottomActionRect, 0f)
         } else {
@@ -953,8 +965,9 @@ class OopsEngine(
     }
 
     private fun advanceToNextActivePlayer() {
-        for (i in 1..players.size) {
-            currentTurnIndex = (currentTurnIndex + 1) % players.size
+        val order = turnOrder
+        for (i in 1..order.size) {
+            currentTurnIndex = (currentTurnIndex + 1) % order.size
             val nextP = getCurrentPlayer()
             if (nextP != null) {
                 if (isTeamMode && isPlayerFinished(nextP.id)) {
@@ -1470,21 +1483,33 @@ class OopsEngine(
                     canvas.drawCircle(tileR.centerX(), tileR.centerY(), cellSize * 0.24f, paint)
                 }
             } else if (entryPlayer != null) {
+                val arrow = when (entryPlayer) {
+                    PlayerId.PLAYER_1 -> "←" // Bottom moves LEFT
+                    PlayerId.PLAYER_3 -> "↑" // Left moves UP
+                    PlayerId.PLAYER_2 -> "→" // Top moves RIGHT
+                    PlayerId.PLAYER_4 -> "↓" // Right moves DOWN
+                }
                 paint.style = Paint.Style.FILL
                 paint.color = entryPlayer.color
                 paint.textSize = cellSize * 0.5f
                 paint.textAlign = Paint.Align.CENTER
                 val fm = paint.fontMetrics
                 val baseline = tileR.centerY() - (fm.ascent + fm.descent) / 2f
-                canvas.drawText("➔", tileR.centerX(), baseline, paint)
+                canvas.drawText(arrow, tileR.centerX(), baseline, paint)
             } else if (safeEntryPlayer != null) {
+                val arrow = when (safeEntryPlayer) {
+                    PlayerId.PLAYER_1 -> "▲" // Turns UP inward
+                    PlayerId.PLAYER_3 -> "▶" // Turns RIGHT inward
+                    PlayerId.PLAYER_2 -> "▼" // Turns DOWN inward
+                    PlayerId.PLAYER_4 -> "◀" // Turns LEFT inward
+                }
                 paint.style = Paint.Style.FILL
                 paint.color = safeEntryPlayer.color
                 paint.textSize = cellSize * 0.5f
                 paint.textAlign = Paint.Align.CENTER
                 val fm = paint.fontMetrics
                 val baseline = tileR.centerY() - (fm.ascent + fm.descent) / 2f
-                canvas.drawText("▲", tileR.centerX(), baseline, paint)
+                canvas.drawText(arrow, tileR.centerX(), baseline, paint)
             } else {
                 paint.style = Paint.Style.FILL
                 paint.color = Color.parseColor("#7D66B3")

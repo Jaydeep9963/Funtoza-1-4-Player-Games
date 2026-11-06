@@ -56,39 +56,39 @@ class LudoEngine(
     private val playerPaths = mutableMapOf<PlayerId, List<Point>>()
     private val playerBaseSlots = mutableMapOf<PlayerId, List<Point>>()
 
-    // Outer 52 track tiles in clockwise order starting from Red's start tile (1, 8)
+    // Outer 52 track tiles in strict CLOCKWISE order starting from Blue's start tile (1, 6)
     private val outerTrack = listOf(
-        // Red horizontal arm moving right
-        Point(1, 8), Point(2, 8), Point(3, 8), Point(4, 8), Point(5, 8),
-        // Down into bottom-vertical arm
-        Point(6, 9), Point(6, 10), Point(6, 11), Point(6, 12), Point(6, 13), Point(6, 14),
-        // Bottom center
-        Point(7, 14),
-        // Up along right side of bottom arm
-        Point(8, 14), Point(8, 13), Point(8, 12), Point(8, 11), Point(8, 10), Point(8, 9),
-        // Right into right-horizontal arm
-        Point(9, 8), Point(10, 8), Point(11, 8), Point(12, 8), Point(13, 8), Point(14, 8),
-        // Right center
-        Point(14, 7),
-        // Left along top side of right arm
-        Point(14, 6), Point(13, 6), Point(12, 6), Point(11, 6), Point(10, 6), Point(9, 6),
-        // Up into top-vertical arm
-        Point(8, 5), Point(8, 4), Point(8, 3), Point(8, 2), Point(8, 1), Point(8, 0),
-        // Top center
+        // 1. Left arm, top row: moving RIGHT from Blue start (1, 6)
+        Point(1, 6), Point(2, 6), Point(3, 6), Point(4, 6), Point(5, 6),
+        // 2. Top arm, left column: moving UP
+        Point(6, 5), Point(6, 4), Point(6, 3), Point(6, 2), Point(6, 1), Point(6, 0),
+        // 3. Top arm, center top
         Point(7, 0),
-        // Down along left side of top arm
-        Point(6, 0), Point(6, 1), Point(6, 2), Point(6, 3), Point(6, 4), Point(6, 5),
-        // Left into left-horizontal arm
-        Point(5, 6), Point(4, 6), Point(3, 6), Point(2, 6), Point(1, 6), Point(0, 6),
-        // Left center
+        // 4. Top arm, right column: moving DOWN (Green start at (8, 1))
+        Point(8, 0), Point(8, 1), Point(8, 2), Point(8, 3), Point(8, 4), Point(8, 5),
+        // 5. Right arm, top row: moving RIGHT
+        Point(9, 6), Point(10, 6), Point(11, 6), Point(12, 6), Point(13, 6), Point(14, 6),
+        // 6. Right arm, right center
+        Point(14, 7),
+        // 7. Right arm, bottom row: moving LEFT (Yellow start at (13, 8))
+        Point(14, 8), Point(13, 8), Point(12, 8), Point(11, 8), Point(10, 8), Point(9, 8),
+        // 8. Bottom arm, right column: moving DOWN
+        Point(8, 9), Point(8, 10), Point(8, 11), Point(8, 12), Point(8, 13), Point(8, 14),
+        // 9. Bottom arm, bottom center
+        Point(7, 14),
+        // 10. Bottom arm, left column: moving UP (Red start at (6, 13))
+        Point(6, 14), Point(6, 13), Point(6, 12), Point(6, 11), Point(6, 10), Point(6, 9),
+        // 11. Left arm, bottom row: moving LEFT
+        Point(5, 8), Point(4, 8), Point(3, 8), Point(2, 8), Point(1, 8), Point(0, 8),
+        // 12. Left arm, left center
         Point(0, 7),
-        // Bottom-left corner
-        Point(0, 8)
+        // 13. Left arm, top-left entry tile (Blue arrow)
+        Point(0, 6)
     )
 
     // Safe track indices where tokens cannot be captured:
-    // Starts: 0 (Red), 13 (Yellow), 26 (Blue), 39 (Green).
-    // Stars: 8 (Bottom arm), 21 (Right arm), 34 (Top arm), 47 (Left arm).
+    // Starts: 0 (Blue), 13 (Green), 26 (Yellow), 39 (Red).
+    // Stars: 8 (Top arm), 21 (Right arm), 34 (Bottom arm), 47 (Left arm).
     private val safeTrackIndices = setOf(0, 8, 13, 21, 26, 34, 39, 47)
 
     // Turn Management
@@ -123,36 +123,36 @@ class LudoEngine(
     }
 
     private fun buildPlayerPaths() {
-        // Red (P1): Bottom-Left, starts at outerTrack[0]
-        playerPaths[PlayerId.PLAYER_1] = buildPathForPlayer(0, listOf(
-            Point(1, 7), Point(2, 7), Point(3, 7), Point(4, 7), Point(5, 7)
-        ), Point(6, 7))
+        // Red (P1): Bottom-Left quadrant (BELOW), starts at outerTrack[39] = (6, 13)
+        playerPaths[PlayerId.PLAYER_1] = buildPathForPlayer(39, listOf(
+            Point(7, 13), Point(7, 12), Point(7, 11), Point(7, 10), Point(7, 9)
+        ), Point(7, 8))
         playerBaseSlots[PlayerId.PLAYER_1] = listOf(
             Point(1, 10), Point(4, 10), Point(1, 13), Point(4, 13)
         )
 
-        // Yellow (P4): Bottom-Right, starts at outerTrack[13]
-        playerPaths[PlayerId.PLAYER_4] = buildPathForPlayer(13, listOf(
-            Point(7, 13), Point(7, 12), Point(7, 11), Point(7, 10), Point(7, 9)
-        ), Point(7, 8))
-        playerBaseSlots[PlayerId.PLAYER_4] = listOf(
-            Point(10, 10), Point(13, 10), Point(10, 13), Point(13, 13)
-        )
-
-        // Blue (P2): Top-Right, starts at outerTrack[26]
-        playerPaths[PlayerId.PLAYER_2] = buildPathForPlayer(26, listOf(
-            Point(13, 7), Point(12, 7), Point(11, 7), Point(10, 7), Point(9, 7)
-        ), Point(8, 7))
+        // Blue (P2): Top-Left quadrant (ABOVE), starts at outerTrack[0] = (1, 6)
+        playerPaths[PlayerId.PLAYER_2] = buildPathForPlayer(0, listOf(
+            Point(1, 7), Point(2, 7), Point(3, 7), Point(4, 7), Point(5, 7)
+        ), Point(6, 7))
         playerBaseSlots[PlayerId.PLAYER_2] = listOf(
-            Point(10, 1), Point(13, 1), Point(10, 4), Point(13, 4)
+            Point(1, 1), Point(4, 1), Point(1, 4), Point(4, 4)
         )
 
-        // Green (P3): Top-Left, starts at outerTrack[39]
-        playerPaths[PlayerId.PLAYER_3] = buildPathForPlayer(39, listOf(
+        // Green (P3): Top-Right quadrant, starts at outerTrack[13] = (8, 1)
+        playerPaths[PlayerId.PLAYER_3] = buildPathForPlayer(13, listOf(
             Point(7, 1), Point(7, 2), Point(7, 3), Point(7, 4), Point(7, 5)
         ), Point(7, 6))
         playerBaseSlots[PlayerId.PLAYER_3] = listOf(
-            Point(1, 1), Point(4, 1), Point(1, 4), Point(4, 4)
+            Point(10, 1), Point(13, 1), Point(10, 4), Point(13, 4)
+        )
+
+        // Yellow (P4): Bottom-Right quadrant, starts at outerTrack[26] = (13, 8)
+        playerPaths[PlayerId.PLAYER_4] = buildPathForPlayer(26, listOf(
+            Point(13, 7), Point(12, 7), Point(11, 7), Point(10, 7), Point(9, 7)
+        ), Point(8, 7))
+        playerBaseSlots[PlayerId.PLAYER_4] = listOf(
+            Point(10, 10), Point(13, 10), Point(10, 13), Point(13, 13)
         )
     }
 
@@ -260,9 +260,22 @@ class LudoEngine(
         bottomDiceRect.set(width / 2f - diceW / 2f, bottomDiceY - diceH / 2f, width / 2f + diceW / 2f, bottomDiceY + diceH / 2f)
     }
 
+    private val turnOrder: List<PlayerId>
+        get() = when (totalPlayers) {
+            4 -> listOf(PlayerId.PLAYER_1, PlayerId.PLAYER_2, PlayerId.PLAYER_3, PlayerId.PLAYER_4)
+            3 -> listOf(PlayerId.PLAYER_1, PlayerId.PLAYER_2, PlayerId.PLAYER_3)
+            else -> listOf(PlayerId.PLAYER_1, PlayerId.PLAYER_2)
+        }
+
     private fun getCurrentPlayer(): Player? {
         if (players.isEmpty()) return null
-        return players[currentTurnIndex % players.size]
+        val order = turnOrder
+        val targetId = order[currentTurnIndex % order.size]
+        return players.firstOrNull { it.id == targetId }
+    }
+
+    private fun isPlayerAtBottom(player: Player): Boolean {
+        return player.id == PlayerId.PLAYER_1 || player.id == PlayerId.PLAYER_4
     }
 
     private fun getBotDelay(): Float {
@@ -275,8 +288,7 @@ class LudoEngine(
 
     private fun getActiveDiceInfo(): Pair<RectF, Float> {
         val activeP = getCurrentPlayer() ?: return Pair(bottomDiceRect, 0f)
-        val index = players.indexOf(activeP).coerceAtLeast(0)
-        val isBottom = (index == 0 || index == 3)
+        val isBottom = isPlayerAtBottom(activeP)
 
         return if (isBottom) {
             Pair(bottomDiceRect, 0f)
@@ -367,8 +379,7 @@ class LudoEngine(
 
             // Case B: Tap to roll dice
             if (!waitingForTokenChoice) {
-                val index = players.indexOf(activeP).coerceAtLeast(0)
-                val isBottom = (index == 0 || index == 3)
+                val isBottom = isPlayerAtBottom(activeP)
                 val (activeDiceRect, _) = getActiveDiceInfo()
 
                 if (isBottom) {
@@ -675,8 +686,9 @@ class LudoEngine(
     }
 
     private fun advanceToNextActivePlayer() {
-        for (i in 1..players.size) {
-            currentTurnIndex = (currentTurnIndex + 1) % players.size
+        val order = turnOrder
+        for (i in 1..order.size) {
+            currentTurnIndex = (currentTurnIndex + 1) % order.size
             val nextP = getCurrentPlayer()
             if (nextP != null) {
                 if (isTeamMode && isPlayerFinished(nextP.id)) {
@@ -807,11 +819,11 @@ class LudoEngine(
         paint.color = Color.parseColor("#120D26")
         canvas.drawRect(RectF(boardLeft, boardTop, boardLeft + boardSize, boardTop + boardSize), paint)
 
-        // 1. Draw 4 Corner Yards (6x6 cells each)
-        drawCornerYard(canvas, 0, 9, 6, 6, PlayerId.PLAYER_1) // Red (Bottom-Left)
+        // 1. Draw 4 Corner Yards (6x6 cells each): Blue above, Red below
+        drawCornerYard(canvas, 0, 0, 6, 6, PlayerId.PLAYER_2) // Blue (Top-Left - ABOVE)
+        drawCornerYard(canvas, 9, 0, 6, 6, PlayerId.PLAYER_3) // Green (Top-Right)
         drawCornerYard(canvas, 9, 9, 6, 6, PlayerId.PLAYER_4) // Yellow (Bottom-Right)
-        drawCornerYard(canvas, 9, 0, 6, 6, PlayerId.PLAYER_2) // Blue (Top-Right)
-        drawCornerYard(canvas, 0, 0, 6, 6, PlayerId.PLAYER_3) // Green (Top-Left)
+        drawCornerYard(canvas, 0, 9, 6, 6, PlayerId.PLAYER_1) // Red (Bottom-Left - BELOW)
 
         // 2. Draw 52 Outer Track Grid Tiles
         outerTrack.forEachIndexed { idx, pt ->
@@ -824,10 +836,10 @@ class LudoEngine(
 
             paint.style = Paint.Style.FILL
             when (idx) {
-                0 -> paint.color = PlayerId.PLAYER_1.color // Red start
-                13 -> paint.color = PlayerId.PLAYER_4.color // Yellow start
-                26 -> paint.color = PlayerId.PLAYER_2.color // Blue start
-                39 -> paint.color = PlayerId.PLAYER_3.color // Green start
+                0 -> paint.color = PlayerId.PLAYER_2.color // Blue start: (1, 6)
+                13 -> paint.color = PlayerId.PLAYER_3.color // Green start: (8, 1)
+                26 -> paint.color = PlayerId.PLAYER_4.color // Yellow start: (13, 8)
+                39 -> paint.color = PlayerId.PLAYER_1.color // Red start: (6, 13)
                 else -> paint.color = Color.parseColor("#1C153A")
             }
             canvas.drawRect(tileR, paint)
@@ -839,25 +851,78 @@ class LudoEngine(
             canvas.drawRect(tileR, paint)
 
             // Star icon ⭐ on safe tiles
-            if (idx in safeTrackIndices) {
+            if (idx in listOf(8, 21, 34, 47)) {
                 paint.style = Paint.Style.FILL
-                paint.color = if (idx in listOf(0, 13, 26, 39)) Color.WHITE else Color.parseColor("#FFD54F")
+                paint.color = Color.parseColor("#FFD54F")
                 paint.textSize = cellSize * 0.45f
                 paint.textAlign = Paint.Align.CENTER
                 val fm = paint.fontMetrics
                 val baseline = tileR.centerY() - (fm.ascent + fm.descent) / 2f
                 canvas.drawText("⭐", tileR.centerX(), baseline, paint)
             }
+
+            // Directional Entry Arrows: Blue → at (0,6), Green ↓ at (8,0), Yellow ← at (14,8), Red ↑ at (6,14)
+            if (idx in listOf(51, 12, 25, 38)) {
+                val (dir, arrowColor) = when (idx) {
+                    51 -> Pair("RIGHT", PlayerId.PLAYER_2.color)
+                    12 -> Pair("DOWN", PlayerId.PLAYER_3.color)
+                    25 -> Pair("LEFT", PlayerId.PLAYER_4.color)
+                    38 -> Pair("UP", PlayerId.PLAYER_1.color)
+                    else -> Pair("", Color.WHITE)
+                }
+                drawDirectionalArrow(canvas, tileR, dir, arrowColor)
+            }
         }
 
         // 3. Draw 4 Colored Home Stretches (5 tiles each leading to center)
-        drawHomeStretch(canvas, listOf(Point(1, 7), Point(2, 7), Point(3, 7), Point(4, 7), Point(5, 7)), PlayerId.PLAYER_1.color)
-        drawHomeStretch(canvas, listOf(Point(7, 13), Point(7, 12), Point(7, 11), Point(7, 10), Point(7, 9)), PlayerId.PLAYER_4.color)
-        drawHomeStretch(canvas, listOf(Point(13, 7), Point(12, 7), Point(11, 7), Point(10, 7), Point(9, 7)), PlayerId.PLAYER_2.color)
-        drawHomeStretch(canvas, listOf(Point(7, 1), Point(7, 2), Point(7, 3), Point(7, 4), Point(7, 5)), PlayerId.PLAYER_3.color)
+        drawHomeStretch(canvas, listOf(Point(1, 7), Point(2, 7), Point(3, 7), Point(4, 7), Point(5, 7)), PlayerId.PLAYER_2.color) // Blue (Left arm - ABOVE)
+        drawHomeStretch(canvas, listOf(Point(7, 1), Point(7, 2), Point(7, 3), Point(7, 4), Point(7, 5)), PlayerId.PLAYER_3.color) // Green (Top arm)
+        drawHomeStretch(canvas, listOf(Point(13, 7), Point(12, 7), Point(11, 7), Point(10, 7), Point(9, 7)), PlayerId.PLAYER_4.color) // Yellow (Right arm)
+        drawHomeStretch(canvas, listOf(Point(7, 13), Point(7, 12), Point(7, 11), Point(7, 10), Point(7, 9)), PlayerId.PLAYER_1.color) // Red (Bottom arm - BELOW)
 
         // 4. Center Home Goal Triangle (3x3 cells in center: cols 6..8, rows 6..8)
         drawCenterHomeGoal(canvas)
+    }
+
+    private fun drawDirectionalArrow(canvas: Canvas, r: RectF, direction: String, color: Int) {
+        val cx = r.centerX()
+        val cy = r.centerY()
+        val w = r.width() * 0.22f
+        val h = r.height() * 0.22f
+        val path = Path()
+        when (direction) {
+            "RIGHT" -> {
+                path.moveTo(cx - w, cy - h)
+                path.lineTo(cx + w, cy)
+                path.lineTo(cx - w, cy + h)
+                path.lineTo(cx - w * 0.3f, cy)
+                path.close()
+            }
+            "DOWN" -> {
+                path.moveTo(cx - w, cy - h)
+                path.lineTo(cx, cy + h)
+                path.lineTo(cx + w, cy - h)
+                path.lineTo(cx, cy - h * 0.3f)
+                path.close()
+            }
+            "LEFT" -> {
+                path.moveTo(cx + w, cy - h)
+                path.lineTo(cx - w, cy)
+                path.lineTo(cx + w, cy + h)
+                path.lineTo(cx + w * 0.3f, cy)
+                path.close()
+            }
+            "UP" -> {
+                path.moveTo(cx - w, cy + h)
+                path.lineTo(cx, cy - h)
+                path.lineTo(cx + w, cy + h)
+                path.lineTo(cx, cy + h * 0.3f)
+                path.close()
+            }
+        }
+        paint.style = Paint.Style.FILL
+        paint.color = color
+        canvas.drawPath(path, paint)
     }
 
     private fun drawCornerYard(canvas: Canvas, startCol: Int, startRow: Int, colSpan: Int, rowSpan: Int, playerId: PlayerId) {
@@ -940,40 +1005,20 @@ class LudoEngine(
         val brX = boardLeft + 9f * cellSize
         val brY = boardTop + 9f * cellSize
 
-        // 4 Converging Triangles
+        // 4 Converging Triangles matching board arms:
         paint.style = Paint.Style.FILL
 
-        // Left triangle (Red)
-        paint.color = PlayerId.PLAYER_1.color
-        val pRed = Path().apply {
+        // Left triangle: Blue (PLAYER_2)
+        paint.color = PlayerId.PLAYER_2.color
+        val pBlue = Path().apply {
             moveTo(tlX, tlY)
             lineTo(cx, cy)
             lineTo(tlX, brY)
             close()
         }
-        canvas.drawPath(pRed, paint)
-
-        // Bottom triangle (Yellow)
-        paint.color = PlayerId.PLAYER_4.color
-        val pYellow = Path().apply {
-            moveTo(tlX, brY)
-            lineTo(cx, cy)
-            lineTo(brX, brY)
-            close()
-        }
-        canvas.drawPath(pYellow, paint)
-
-        // Right triangle (Blue)
-        paint.color = PlayerId.PLAYER_2.color
-        val pBlue = Path().apply {
-            moveTo(brX, brY)
-            lineTo(cx, cy)
-            lineTo(brX, tlY)
-            close()
-        }
         canvas.drawPath(pBlue, paint)
 
-        // Top triangle (Green)
+        // Top triangle: Green (PLAYER_3)
         paint.color = PlayerId.PLAYER_3.color
         val pGreen = Path().apply {
             moveTo(brX, tlY)
@@ -982,6 +1027,26 @@ class LudoEngine(
             close()
         }
         canvas.drawPath(pGreen, paint)
+
+        // Right triangle: Yellow (PLAYER_4)
+        paint.color = PlayerId.PLAYER_4.color
+        val pYellow = Path().apply {
+            moveTo(brX, brY)
+            lineTo(cx, cy)
+            lineTo(brX, tlY)
+            close()
+        }
+        canvas.drawPath(pYellow, paint)
+
+        // Bottom triangle: Red (PLAYER_1)
+        paint.color = PlayerId.PLAYER_1.color
+        val pRed = Path().apply {
+            moveTo(tlX, brY)
+            lineTo(cx, cy)
+            lineTo(brX, brY)
+            close()
+        }
+        canvas.drawPath(pRed, paint)
 
         // Center Gold Crown / Star Trophy
         paint.style = Paint.Style.FILL
@@ -1212,22 +1277,22 @@ class LudoEngine(
             val badgeH = 44f * density
             val badgeW = (width - 36f * density) / 2f
 
-            // Top: P3 (Left) & P2 (Right) - Rotated 180° for players across
-            val p3 = players.getOrNull(2)
-            if (p3 != null) {
-                val rectP3 = RectF(14f * density, topCardTop, 14f * density + badgeW, topCardTop + badgeH)
-                drawMiniBadge(canvas, p3, rectP3, (p3 == activeP), isTopPlayer = true)
-            }
+            // Top: P2 (Left - Blue, ABOVE) & P3 (Right - Green) - Rotated 180° for players across
             val p2 = players.getOrNull(1)
             if (p2 != null) {
-                val rectP2 = RectF(width - 14f * density - badgeW, topCardTop, width - 14f * density, topCardTop + badgeH)
+                val rectP2 = RectF(14f * density, topCardTop, 14f * density + badgeW, topCardTop + badgeH)
                 drawMiniBadge(canvas, p2, rectP2, (p2 == activeP), isTopPlayer = true)
             }
+            val p3 = players.getOrNull(2)
+            if (p3 != null) {
+                val rectP3 = RectF(width - 14f * density - badgeW, topCardTop, width - 14f * density, topCardTop + badgeH)
+                drawMiniBadge(canvas, p3, rectP3, (p3 == activeP), isTopPlayer = true)
+            }
 
-            // Bottom: P1 (Left or Center) & P4 (Right)
+            // Bottom: P1 (Left - Red, BELOW) & P4 (Right - Yellow)
             val p1 = players.getOrNull(0)
             val p4 = players.getOrNull(3)
-            if (p4 != null && p1 != null) {
+            if (p1 != null && p4 != null) {
                 val rectP1 = RectF(14f * density, bottomCardTop, 14f * density + badgeW, bottomCardTop + badgeH)
                 drawMiniBadge(canvas, p1, rectP1, (p1 == activeP), isTopPlayer = false)
                 val rectP4 = RectF(width - 14f * density - badgeW, bottomCardTop, width - 14f * density, bottomCardTop + badgeH)
