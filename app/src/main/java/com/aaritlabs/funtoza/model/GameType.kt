@@ -90,6 +90,34 @@ enum class GameType(
         "⛳",
         "#00E5FF",
         4
+    ),
+    COLOR_WARS(
+        "Color Wars",
+        "Chain reaction strategy duel! Place dots, trigger cascading explosions, and conquer the entire board!",
+        "🔴",
+        "#FF3B30",
+        4
+    ),
+    GUESS_THE_PERSON(
+        "Guess The Person",
+        "Classic mystery deduction! Ask clever questions, eliminate suspects, and unmask your rival's secret person!",
+        "🕵️",
+        "#8A2BE2",
+        2
+    ),
+    FIND_MATCH(
+        "Find Match",
+        "Spot the one matching symbol before your opponents! Fast reflexes across 5 intense rounds!",
+        "🔍",
+        "#FF9500",
+        4
+    ),
+    PIZZA_MEMORY(
+        "Pizza Memory",
+        "Memorize the customer's pizza order, assemble toppings fast, and ring the bell first!",
+        "🍕",
+        "#FF6B00",
+        4
     );
 
     companion object {

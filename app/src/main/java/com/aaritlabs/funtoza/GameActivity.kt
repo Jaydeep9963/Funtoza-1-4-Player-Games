@@ -356,11 +356,15 @@ class GameActivity : AppCompatActivity() {
             GameType.MEMORY -> MemoryEngine(this, playerCount, soundManager, botDifficulty)
             GameType.WHACK_A_MOLE -> WhackAMoleEngine(this, playerCount, soundManager, botDifficulty)
             GameType.MINI_GOLF -> MiniGolfEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.COLOR_WARS -> ColorWarsEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.GUESS_THE_PERSON -> GuessThePersonEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.FIND_MATCH -> FindMatchEngine(this, playerCount, soundManager, botDifficulty)
+            GameType.PIZZA_MEMORY -> PizzaMemoryEngine(this, playerCount, soundManager, botDifficulty)
         }
 
         engine.isTeamMode = isTeamMode
         engine.playerNames = playerNames
-        if (gameType != GameType.WHACK_A_MOLE && gameType != GameType.MINI_GOLF && gameType != GameType.MEMORY && gameType != GameType.DOTS_AND_BOXES) {
+        if (gameType != GameType.WHACK_A_MOLE && gameType != GameType.MINI_GOLF && gameType != GameType.MEMORY && gameType != GameType.DOTS_AND_BOXES && gameType != GameType.COLOR_WARS && gameType != GameType.FIND_MATCH && gameType != GameType.PIZZA_MEMORY) {
             engine.players.forEach { p ->
                 p.score = sessionWins[p.id] ?: 0
             }
@@ -368,7 +372,7 @@ class GameActivity : AppCompatActivity() {
         engine.onRoundOverListener = { winner ->
             if (winner != null) {
                 sessionWins[winner.id] = (sessionWins[winner.id] ?: 0) + 1
-                if (gameType != GameType.WHACK_A_MOLE && gameType != GameType.MINI_GOLF && gameType != GameType.MEMORY && gameType != GameType.DOTS_AND_BOXES) {
+                if (gameType != GameType.WHACK_A_MOLE && gameType != GameType.MINI_GOLF && gameType != GameType.MEMORY && gameType != GameType.DOTS_AND_BOXES && gameType != GameType.COLOR_WARS && gameType != GameType.FIND_MATCH && gameType != GameType.PIZZA_MEMORY) {
                     winner.score = sessionWins[winner.id] ?: 1
                 }
             }

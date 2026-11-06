@@ -66,6 +66,10 @@ class SelectGameActivity : AppCompatActivity() {
         val cardMemory = findViewById<LinearLayout>(R.id.cardSelectMemory)
         val cardWhackAMole = findViewById<LinearLayout>(R.id.cardSelectWhackAMole)
         val cardMiniGolf = findViewById<LinearLayout>(R.id.cardSelectMiniGolf)
+        val cardColorWars = findViewById<LinearLayout>(R.id.cardSelectColorWars)
+        val cardGuessThePerson = findViewById<LinearLayout>(R.id.cardSelectGuessThePerson)
+        val cardFindMatch = findViewById<LinearLayout>(R.id.cardSelectFindMatch)
+        val cardPizzaMemory = findViewById<LinearLayout>(R.id.cardSelectPizzaMemory)
 
         if (playerCount == 1) {
             tvSelectSnakeTitle?.text = "SLITHER SNAKE"
@@ -94,6 +98,10 @@ class SelectGameActivity : AppCompatActivity() {
         cardMemory.visibility = if (playerCount <= GameType.MEMORY.maxPlayers) View.VISIBLE else View.GONE
         cardWhackAMole.visibility = if (playerCount <= GameType.WHACK_A_MOLE.maxPlayers) View.VISIBLE else View.GONE
         cardMiniGolf.visibility = if (playerCount <= GameType.MINI_GOLF.maxPlayers) View.VISIBLE else View.GONE
+        cardColorWars.visibility = if (playerCount <= GameType.COLOR_WARS.maxPlayers) View.VISIBLE else View.GONE
+        cardGuessThePerson.visibility = if (playerCount <= GameType.GUESS_THE_PERSON.maxPlayers) View.VISIBLE else View.GONE
+        cardFindMatch.visibility = if (playerCount <= GameType.FIND_MATCH.maxPlayers) View.VISIBLE else View.GONE
+        cardPizzaMemory.visibility = if (playerCount <= GameType.PIZZA_MEMORY.maxPlayers) View.VISIBLE else View.GONE
 
         // Set matchup subtitle
         tvMatchup.text = when {
@@ -141,6 +149,10 @@ class SelectGameActivity : AppCompatActivity() {
         cardMemory.setOnClickListener { checkAndLaunchGame(GameType.MEMORY) }
         cardWhackAMole.setOnClickListener { checkAndLaunchGame(GameType.WHACK_A_MOLE) }
         cardMiniGolf.setOnClickListener { checkAndLaunchGame(GameType.MINI_GOLF) }
+        cardColorWars.setOnClickListener { checkAndLaunchGame(GameType.COLOR_WARS) }
+        cardGuessThePerson.setOnClickListener { checkAndLaunchGame(GameType.GUESS_THE_PERSON) }
+        cardFindMatch.setOnClickListener { checkAndLaunchGame(GameType.FIND_MATCH) }
+        cardPizzaMemory.setOnClickListener { checkAndLaunchGame(GameType.PIZZA_MEMORY) }
 
         startSparkleStarsAnimation()
     }
