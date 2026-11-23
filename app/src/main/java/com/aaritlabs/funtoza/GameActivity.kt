@@ -23,6 +23,7 @@ import com.aaritlabs.funtoza.engine.*
 import com.aaritlabs.funtoza.model.GameType
 import com.aaritlabs.funtoza.model.Player
 import com.aaritlabs.funtoza.model.PlayerId
+import com.aaritlabs.funtoza.util.SafeAreaUtils
 import com.aaritlabs.funtoza.view.CelebrationStarBlastView
 import com.aaritlabs.funtoza.view.GameSurfaceView
 
@@ -79,7 +80,7 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        hideSystemUI()
+        SafeAreaUtils.setupEdgeToEdge(this)
 
         soundManager = SoundManager.getInstance(this)
         com.aaritlabs.funtoza.monetization.AdMobManager.getInstance(this).loadInterstitial()
@@ -108,6 +109,36 @@ class GameActivity : AppCompatActivity() {
         btnResume = findViewById(R.id.btnResume)
         btnRestart = findViewById(R.id.btnRestart)
         btnExitMenu = findViewById(R.id.btnExitMenu)
+
+        val gameRoot = findViewById<View>(R.id.gameRootLayout)
+        val hudLayout = findViewById<View>(R.id.hudLayout)
+        val hudInitialPaddingTop = hudLayout?.paddingTop ?: 0
+        val hudInitialPaddingLeft = hudLayout?.paddingLeft ?: 0
+        val hudInitialPaddingRight = hudLayout?.paddingRight ?: 0
+        val hudInitialPaddingBottom = hudLayout?.paddingBottom ?: 0
+
+        if (gameRoot != null) {
+            SafeAreaUtils.applySafeAreaCallback(gameRoot) { insets ->
+                val surfaceLp = gameSurfaceView.layoutParams as? FrameLayout.LayoutParams
+                if (surfaceLp != null) {
+                    if (surfaceLp.leftMargin != insets.left ||
+                        surfaceLp.topMargin != insets.top ||
+                        surfaceLp.rightMargin != insets.right ||
+                        surfaceLp.bottomMargin != insets.bottom
+                    ) {
+                        surfaceLp.setMargins(insets.left, insets.top, insets.right, insets.bottom)
+                        gameSurfaceView.layoutParams = surfaceLp
+                    }
+                }
+
+                hudLayout?.setPadding(
+                    hudInitialPaddingLeft + insets.left,
+                    hudInitialPaddingTop + insets.top,
+                    hudInitialPaddingRight + insets.right,
+                    hudInitialPaddingBottom
+                )
+            }
+        }
 
         winnerOverlay = findViewById(R.id.winnerOverlay)
         starBlastView = findViewById(R.id.starBlastView)
@@ -772,12 +803,14 @@ class GameActivity : AppCompatActivity() {
         adAnimator?.cancel()
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            SafeAreaUtils.hideSystemBars(this)
+        }
+    }
+
     private fun hideSystemUI() {
-        try {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            val controller = WindowCompat.getInsetsController(window, window.decorView)
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        } catch (_: Exception) {}
+        SafeAreaUtils.hideSystemBars(this)
     }
 }

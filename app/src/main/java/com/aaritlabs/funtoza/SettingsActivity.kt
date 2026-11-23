@@ -26,6 +26,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.aaritlabs.funtoza.audio.SoundManager
 import com.aaritlabs.funtoza.model.TournamentHistoryManager
+import com.aaritlabs.funtoza.util.SafeAreaUtils
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -34,7 +35,10 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        hideSystemUI()
+        SafeAreaUtils.setupEdgeToEdge(this)
+        findViewById<View>(R.id.settingsRootLayout)?.let {
+            SafeAreaUtils.applySafeAreaPadding(it)
+        }
 
         soundManager = SoundManager.getInstance(this)
         val prefs = getSharedPreferences("funtoza_prefs", Context.MODE_PRIVATE)
@@ -610,11 +614,14 @@ class SettingsActivity : AppCompatActivity() {
         hideSystemUI()
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            SafeAreaUtils.hideSystemBars(this)
+        }
+    }
+
     private fun hideSystemUI() {
-        try {
-            val controller = WindowCompat.getInsetsController(window, window.decorView)
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-        } catch (_: Exception) {}
+        SafeAreaUtils.hideSystemBars(this)
     }
 }

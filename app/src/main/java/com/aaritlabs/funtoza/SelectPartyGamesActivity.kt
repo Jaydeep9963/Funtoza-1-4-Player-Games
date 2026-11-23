@@ -21,6 +21,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.aaritlabs.funtoza.audio.SoundManager
 import com.aaritlabs.funtoza.model.GameType
 import com.aaritlabs.funtoza.model.TournamentState
+import com.aaritlabs.funtoza.util.SafeAreaUtils
 import com.aaritlabs.funtoza.monetization.AdMobManager
 import com.aaritlabs.funtoza.monetization.BillingManager
 
@@ -43,7 +44,10 @@ class SelectPartyGamesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_party_games)
-        hideSystemUI()
+        SafeAreaUtils.setupEdgeToEdge(this)
+        findViewById<View>(R.id.selectPartyRootLayout)?.let {
+            SafeAreaUtils.applySafeAreaPadding(it)
+        }
 
         soundManager = SoundManager.getInstance(this)
 
@@ -671,12 +675,14 @@ class SelectPartyGamesActivity : AppCompatActivity() {
         hideSystemUI()
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            SafeAreaUtils.hideSystemBars(this)
+        }
+    }
+
     private fun hideSystemUI() {
-        try {
-            WindowCompat.setDecorFitsSystemWindows(window, false)
-            val controller = WindowCompat.getInsetsController(window, window.decorView)
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        } catch (_: Exception) {}
+        SafeAreaUtils.hideSystemBars(this)
     }
 }
