@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
+    <!-- Mark portrait hardware feature as optional so Google Play makes the app available on Tablets, Foldables, Chromebooks, Desktop/Play Games on PC, and Android XR -->
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
+
     <application
         android:name=".FuntozaApp"
         android:allowBackup="true"
